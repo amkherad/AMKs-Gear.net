@@ -31,27 +31,20 @@ nugetPack() {
 #!param $2 source path          (i.e. http://repo.com/)
 nugetAddToSource() {
 
-    rm -r "$1/.repo/"
-
-exit 0
-    for nupkg in "$1/.pack/*";do
-        #nuget add "$nupkg" -source "$1/.repo/"
-        echo $nupkg
-
+    rm -r "$1/.repo/*"
+    PACK_PATH="$1/.pack/*"
+    for nupkg in $PACK_PATH;do
         if [ "$2" != "" ];then
             nuget add "$nupkg" -source "$2"
         fi
+
+        nuget add "$nupkg" -source "$1/.repo/"
     done;
 }
 
 # loop & print a folder recusively,
 #!param $1 root path
 nugetRecursivePack() {
-    echo "$1/.build/*"
-    exit 0
-    rm -rf "$1/.build/*"
-    rm -rf "$1/.pack/*"
-
     for i in "$1"/*;do
         if [ -d "$i" ]; then
             nugetRecursivePack "$i"
@@ -72,7 +65,10 @@ EOF
     done
 }
 
+rm -r "$tempPath/.build/"
+rm -r "$tempPath/.pack/"
+
 nugetRecursivePack ..
-#nugetAddToSource "$tempPath" "$source" 
+nugetAddToSource "$tempPath" "$source" 
 
 exit 0

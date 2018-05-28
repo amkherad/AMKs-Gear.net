@@ -4,6 +4,7 @@
 .idea/
 .nuget/.pack/
 .nuget/.build/
+.nuget/.repo/
 .output/
 
 # User-specific files
