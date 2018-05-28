@@ -1,0 +1,4 @@
+﻿namespace AMKsGear.Core
+{
+
+}

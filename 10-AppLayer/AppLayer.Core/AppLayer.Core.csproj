@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>AMKsGear.AppLayer.Core</AssemblyName>
+    <RootNamespace>AMKsGear.AppLayer.Core</RootNamespace>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <NuspecFile>../../-Shared/SharedProperties.nuspec</NuspecFile>
+    <NuspecProperties>id=$(AssemblyName)</NuspecProperties>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>../../.output/Debug/</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>../../.output/Release/</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\00-Core\Architecture\Architecture.csproj" />
+    <ProjectReference Include="..\..\00-Core\Core\Core.csproj" />
+    <ProjectReference Include="..\..\00-Core\Core.Data\Core.Data.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\-Shared\SharedAssemblyInfo.cs">
+      <Link>AssemblyScope/SharedAssemblyInfo.cs</Link>
+    </Compile>
+  </ItemGroup>
+</Project>
