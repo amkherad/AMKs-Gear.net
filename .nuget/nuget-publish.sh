@@ -19,12 +19,11 @@ fi
 #!param $1 project path
 #!param $2 project name
 #!param $3 *.csproj file path   (i.e. project1.csproj)
-#!param $4 *.nuspec file path   (i.e. project1.nuspec)
-#!param $5 temp path            (i.e. ./.nuget)
+#!param $4 temp path            (i.e. ./.nuget)
 nugetPack() {
 
-    #dotnet build --output "$5/.build/"  --configuration Release $3
-    dotnet pack --output "$5/.pack/" --configuration Release $3
+    #dotnet build --output "$4/.build/"  --configuration Release $3
+    dotnet pack --output "$4/.pack/" --configuration Release $3
 }
 
 #!param $1 temp path            (i.e. ./.nuget)
@@ -56,17 +55,14 @@ EOF
                 path=$(dirname "$i")
                 filename=$(basename "$i")
                 fname="${filename%.*}"
-                check="$path/$fname.nuspec"
-                if [ -f "$check" ]; then
-                    nugetPack "$path" "$fname" "$i" "$check" "$tempPath"
+                check="$path/$fname.ignore-pack"
+                if [ ! -f "$check" ]; then
+                    nugetPack "$path" "$fname" "$i" "$tempPath"
                 fi
             fi
         fi
     done
 }
-
-rm -r "$tempPath/.build/"
-rm -r "$tempPath/.pack/"
 
 nugetRecursivePack ..
 nugetAddToSource "$tempPath" "$source" 

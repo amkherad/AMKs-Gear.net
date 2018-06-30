@@ -3,16 +3,24 @@
     <AssemblyName>AMKsGear.Core.TraceTools</AssemblyName>
     <RootNamespace>AMKsGear.Core.TraceTools</RootNamespace>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <NuspecFile>../../-Shared/SharedProperties.nuspec</NuspecFile>
-    <NuspecProperties>id=$(AssemblyName)</NuspecProperties>
-    <TargetFrameworks>netcoreapp2.0;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netcoreapp2.1;netstandard2.0</TargetFrameworks>
     <LangVersion>7.2</LangVersion>
+    
+    <Authors>Ali Mousavi Kherad</Authors>
+    <Description>AMK's Gear.net a light-weighted cross-platform framework for fast business solutions.</Description>
+    <Copyright>Copyright 2018 Ali Mousavi Kherad</Copyright>
+    <PackageProjectUrl>https://github.com/amkherad/AMKs-Gear.net/wiki</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/amkherad/AMKs-Gear.net</RepositoryUrl>
+    <RepositoryType>Github</RepositoryType>
+    <Version>$(AssemblyVersion)</Version>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <OutputPath>../../.output/Debug/</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NETCOREAPP;NETCOREAPP2_0</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <OutputPath>../../.output/Release/</OutputPath>
+    <DefineConstants>TRACE;RELEASE;NETCOREAPP;NETCOREAPP2_0</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Architecture\Architecture.csproj" />
@@ -22,5 +30,8 @@
     <Compile Include="..\..\-Shared\SharedAssemblyInfo.cs">
       <Link>AssemblyScope/SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Content Include="../../README.md">
+      <IncludeInPackage>true</IncludeInPackage>
+    </Content>
   </ItemGroup>
 </Project>

@@ -13,7 +13,7 @@ using AMKsGear.Architecture.Framework;
 //           InternalsVisibleTo(FrameworkMembers.ServiceCoreId),
 //           InternalsVisibleTo(FrameworkMembers.ServiceWcfId),
 //
-//           InternalsVisibleTo(FrameworkMembers.WebCoreId),
+           InternalsVisibleTo(FrameworkMembers.WebCoreId),
 //           InternalsVisibleTo(FrameworkMembers.WebEngineId),
 //           InternalsVisibleTo(FrameworkMembers.WebMvcId),
 //           InternalsVisibleTo(FrameworkMembers.WebApiId),
@@ -46,16 +46,17 @@ using AMKsGear.Architecture.Framework;
 //           InternalsVisibleTo(FrameworkMembers.AmkWebLibId),
 ]
 
+[assembly: Guid("63963cc0-cec8-4de8-9dbf-d97c195a5db3")]
+
 [assembly: AssemblyTitle(FrameworkMembers.ArchitectureName)] //FrameworkInfo.NameSpaced + FrameworkMembers.ArchitectureName + " by Ali Mousavi Kherad")]
 [assembly: FrameworkMember(FrameworkMembers.ArchitectureId)]
 [assembly: AssemblyDescription(FrameworkInfo.Description)]
-[assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany(FrameworkInfo.Company)]
 [assembly: AssemblyProduct(FrameworkInfo.Product)]
 [assembly: AssemblyCopyright(FrameworkInfo.Copyright)]
 [assembly: AssemblyTrademark(FrameworkInfo.Trademark)]
-[assembly: AssemblyCulture(FrameworkInfo.Calture)]
 [assembly: AssemblyVersion(FrameworkInfo.Version)]
 [assembly: AssemblyFileVersion(FrameworkInfo.Version)]
-[assembly: ComVisible(FrameworkInfo.GeneralComVisibleState)]
-[assembly: Guid("63963cc0-cec8-4de8-9dbf-d97c195a5db3")]
+[assembly: AssemblyInformationalVersion(FrameworkInfo.Version)]
+//[assembly: ComVisible(FrameworkInfo.GeneralComVisibleState)]
+[assembly: AssemblyCulture(FrameworkInfo.Calture)]

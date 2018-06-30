@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <AssemblyName>AMKsGear.Core.Data</AssemblyName>
-    <RootNamespace>AMKsGear.Core.Data</RootNamespace>
+    <AssemblyName>AMKsGear.Web.Core</AssemblyName>
+    <RootNamespace>AMKsGear.Web.Core</RootNamespace>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <TargetFrameworks>netcoreapp2.1;netstandard2.0</TargetFrameworks>
     <LangVersion>7.2</LangVersion>
-    
+
     <Authors>Ali Mousavi Kherad</Authors>
     <Description>AMK's Gear.net a light-weighted cross-platform framework for fast business solutions.</Description>
     <Copyright>Copyright 2018 Ali Mousavi Kherad</Copyright>
@@ -23,8 +23,9 @@
     <DefineConstants>TRACE;RELEASE;NETCOREAPP;NETCOREAPP2_0</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Architecture\Architecture.csproj" />
-    <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="..\..\00-Core\Architecture\Architecture.csproj" />
+    <ProjectReference Include="..\..\00-Core\Core\Core.csproj" />
+    <ProjectReference Include="..\..\00-Core\Core.Data\Core.Data.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\-Shared\SharedAssemblyInfo.cs">

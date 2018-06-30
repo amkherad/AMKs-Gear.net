@@ -38,9 +38,9 @@
         public const string ServiceWcfId = "AMKsGear.ServiceWcf";
         public const string ServiceWcfFullName = "AMKsGear.ServiceWcf";
 
-        public const string WebCoreName = "AMKsGear.WebCore";
-        public const string WebCoreId = "AMKsGear.WebCore";
-        public const string WebCoreFullName = "AMKsGear.WebCore";
+        public const string WebCoreName = "AMKsGear.Web.Core";
+        public const string WebCoreId = "AMKsGear.Web.Core";
+        public const string WebCoreFullName = "AMKsGear.Web.Core";
 
         public const string WebEngineName = "AMKsGear.WebEngine";
         public const string WebEngineId = "AMKsGear.WebEngine";

@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>$id$</id>
-    <version>1.2018.20</version>
+    <version>$version$</version>
     <title>$title$</title>
     <authors>Ali Mousavi Kherad</authors>
     <owners>Ali Mousavi Kherad</owners>
@@ -10,7 +10,7 @@
     <projectUrl>http://amkdp.ir/amks-gear.net/</projectUrl>
     <iconUrl>http://amkdp.ir/amks-gear.net/assets/icon.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>$$</description>
+    <description>AMK's Gear.net a light-weighted cross-platform framework for fast business solutions.</description>
     <copyright>Copyright 2018 Ali Mousavi Kherad</copyright>
     <files>
       <file src="../README.md" target="README.md" />

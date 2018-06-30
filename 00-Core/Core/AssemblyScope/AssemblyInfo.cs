@@ -1,7 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using AMKsGear.Architecture.Framework;
 
-//[assembly: InternalsVisibleTo(FrameworkMembers.CoreId),
+[assembly: InternalsVisibleTo(FrameworkMembers.WebCoreId),
 //           InternalsVisibleTo(FrameworkMembers.CoreTraceToolsId),
 //
 //           InternalsVisibleTo(FrameworkMembers.DataCoreId),
@@ -16,7 +16,8 @@ using AMKsGear.Architecture.Framework;
 //           InternalsVisibleTo(FrameworkMembers.DesktopCoreId),
 //           InternalsVisibleTo(FrameworkMembers.WinCoreId),
 //
-//           InternalsVisibleTo(FrameworkMembers.NewtonsoftJsonId),]
+//           InternalsVisibleTo(FrameworkMembers.NewtonsoftJsonId),
+]
 
 class AssemblyInfo
 {
