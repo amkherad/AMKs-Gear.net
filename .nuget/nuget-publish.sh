@@ -24,7 +24,7 @@ fi
 nugetPack() {
 
     #dotnet build --output "$5/.build/"  --configuration Release $3
-    dotnet pack --output "$5/.pack/" --configuration Release $3 -IncludeReferencedProjects --include-symbols
+    dotnet pack --output "$5/.pack/" --configuration Release $3
 }
 
 #!param $1 temp path            (i.e. ./.nuget)
