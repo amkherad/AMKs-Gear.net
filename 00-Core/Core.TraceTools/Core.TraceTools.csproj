@@ -1,11 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>AMKsGear.Core.TraceTools</AssemblyName>
     <RootNamespace>AMKsGear.Core.TraceTools</RootNamespace>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <NuspecFile>../../-Shared/SharedProperties.nuspec</NuspecFile>
     <NuspecProperties>id=$(AssemblyName)</NuspecProperties>
+    <TargetFrameworks>netcoreapp2.0;netstandard2.0</TargetFrameworks>
+    <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <OutputPath>../../.output/Debug/</OutputPath>
