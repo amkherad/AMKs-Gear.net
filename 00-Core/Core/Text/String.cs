@@ -227,9 +227,9 @@ namespace AMKsGear.Core.Text
 
             switch (compare)
             {
-                case StringCompare.Equal:
+                case StringCompare.Equals:
                     return source.Equals(compareTo, comparison);
-                case StringCompare.NotEqual:
+                case StringCompare.NotEquals:
                     return !source.Equals(compareTo, comparison);
                 case StringCompare.Contains:
                     return source.IndexOf(compareTo, comparison) >= 0;

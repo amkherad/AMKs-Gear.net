@@ -23,7 +23,7 @@ fi
 nugetPack() {
 
     #dotnet build --output "$4/.build/"  --configuration Release $3
-    dotnet pack --output "$4/.pack/" --configuration Release $3
+    dotnet pack --output "$4/.pack/" --configuration Release $3  --no-dependencies
 }
 
 #!param $1 temp path            (i.e. ./.nuget)

@@ -29,8 +29,5 @@
     <Compile Include="..\..\-Shared\SharedAssemblyInfo.cs">
       <Link>AssemblyScope/SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Content Include="../../README.md">
-      <IncludeInPackage>true</IncludeInPackage>
-    </Content>
   </ItemGroup>
 </Project>

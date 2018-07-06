@@ -25,5 +25,7 @@ namespace AMKsGear.Core.Parallelism
                 Monitor.Exit(_lockTarget);
             }
         }
+
+        public object GetUnderlyingContext() => _lockTarget;
     }
 }

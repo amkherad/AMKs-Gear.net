@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Linq.Expressions;
+using AMKsGear.Architecture;
 
-namespace AMKsGear.Architecture.Data
+namespace AMKsGear.Core.Data
 {
     public class SortingContext<T>
     {

@@ -2,9 +2,9 @@
 
 namespace AMKsGear.Architecture.Data.Schema
 {
-    public interface IUsernamePasssword : IUsername, IPassword
+    public interface IUsernameStringPasssword : IUsernameString, IPasswordString
     {
     }
-    public interface IUsernamePassswordEntity : IUsernamePasssword, IUsernameEntity, IPasswordEntity { }
-    public interface IUsernamePassswordModel : IUsernamePasssword, IUsernameModel, IPasswordModel { }
+    public interface IUsernameStringPassswordStringEntity : IUsernameStringPasssword, IUsernameStringEntity, IPasswordStringEntity { }
+    public interface IUsernameStringPassswordStringModel : IUsernameStringPasssword, IUsernameStringModel, IPasswordStringModel { }
 }

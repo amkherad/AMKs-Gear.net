@@ -124,11 +124,11 @@ namespace AMKsGear.Core.Linq.Expressions
         {
             switch (compare)
             {
-                case StringCompare.Equal:
+                case StringCompare.Equals:
                     return comparer == null
                         ? Expression.Lambda<Func<TEntity, bool>>(Expression.Equal(parameter, operand), param)
                         : null;
-                case StringCompare.NotEqual:
+                case StringCompare.NotEquals:
                     return comparer == null
                         ? Expression.Lambda<Func<TEntity, bool>>(Expression.NotEqual(parameter, operand), param)
                         : null;
@@ -167,11 +167,11 @@ namespace AMKsGear.Core.Linq.Expressions
         {
             switch (compare)
             {
-                case StringCompare.Equal:
+                case StringCompare.Equals:
                     return comparer == null
                         ? Expression.Lambda<Func<string, bool>>(Expression.Equal(parameter, operand), param)
                         : null;
-                case StringCompare.NotEqual:
+                case StringCompare.NotEquals:
                     return comparer == null
                         ? Expression.Lambda<Func<string, bool>>(Expression.NotEqual(parameter, operand), param)
                         : null;

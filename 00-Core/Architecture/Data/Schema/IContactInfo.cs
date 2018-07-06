@@ -3,29 +3,29 @@
 namespace AMKsGear.Architecture.Data.Schema
 {
     public interface IContactInfo :
-        IFullName,
-        IEmail,
-        IAddress,
-        IPhone,
-        IDescription
+        IFullNameString,
+        IEmailString,
+        IAddressString,
+        IPhoneString,
+        IDescriptionString
     { }
 
-    public interface IContactInfoEntity :
+    public interface IContactInfoStringStringStringStringStringEntity :
         IContactInfo,
         IEntity,
-        IFullNameEntity,
-        IEmailEntity,
-        IAddressEntity,
-        IPhoneEntity,
-        IDescriptionEntity
+        IFullNameStringEntity,
+        IEmailStringEntity,
+        IAddressStringEntity,
+        IPhoneStringEntity,
+        IDescriptionStringEntity
     { }
-    public interface IContactInfoModel :
+    public interface IContactInfoStringStringStringStringStringModel :
         IContactInfo,
         IModel,
-        IFullNameModel,
-        IEmailModel,
-        IAddressModel,
-        IPhoneModel,
-        IDescriptionModel
+        IFullNameStringModel,
+        IEmailStringModel,
+        IAddressStringModel,
+        IPhoneStringModel,
+        IDescriptionStringModel
     { }
 }

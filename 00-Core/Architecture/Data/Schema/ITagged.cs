@@ -4,7 +4,7 @@ namespace AMKsGear.Architecture.Data.Schema
 {
     public interface ITagged<TTag>
     {
-        TTag Tags { get; set; }
+        TTag Tag { get; set; }
     }
     public interface ITaggedEntity<TTag> : ITagged<TTag>, IEntity { }
     public interface ITaggedModel<TTag> : ITagged<TTag>, IModel { }

@@ -2,7 +2,7 @@
 
 namespace AMKsGear.Core.Data.Models
 {
-    public class UsernamePasswordModel : IUsernamePassswordModel
+    public class UsernameStringPasswordStringModel : IUsernameStringPassswordStringModel
     {
         public string Username { get; set; }
         public string Password { get; set; }

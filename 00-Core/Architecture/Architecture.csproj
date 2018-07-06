@@ -22,9 +22,4 @@
     <OutputPath>../../.output/Release/</OutputPath>
     <DefineConstants>TRACE;RELEASE;NETCOREAPP;NETCOREAPP2_0</DefineConstants>
   </PropertyGroup>
-  <ItemGroup>
-    <Content Include="../../README.md">
-      <IncludeInPackage>true</IncludeInPackage>
-    </Content>
-  </ItemGroup>
 </Project>

@@ -2,8 +2,8 @@
 {
     public enum StringCompare
     {
-        Equal,
-        NotEqual,
+        Equals,
+        NotEquals,
 
         Contains,
         NotContains,
