@@ -1,15 +1,24 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AMKsGear.Core.Utils
 {
+    public delegate Task LoopCountLimiterAsyncDelay(double delay);
+    
     public class LoopCountLimiter
     {
         public static readonly Action<double> Delay = val =>
         {
             var x = (int)val;
             if (x != 0) // to prevent yielding the current thread.
-                Task.Delay(x).Wait(); // we need at least x milliseconds (doesnt matter if gets more...)
+                Thread.Sleep(x); // we need at least x milliseconds (doesnt matter if gets more...)
+        };
+        public static readonly LoopCountLimiterAsyncDelay DelayAsync = async val =>
+        {
+            var x = (int)val;
+            if (x != 0) // to prevent yielding the current thread.
+                await Task.Delay(x); // we need at least x milliseconds (doesnt matter if gets more...)
         };
 
         double _delay = 0;
@@ -78,7 +87,7 @@ namespace AMKsGear.Core.Utils
             callback(_delay);
         }
         
-        public Task CountAsync()
+        public async Task CountAsync()
         {
             _frames++;
             if (_interval > 0)
@@ -105,7 +114,7 @@ namespace AMKsGear.Core.Utils
             {
                 _delay = 0;
             }
-            return Task.Delay((int)_delay);
+            await DelayAsync((int)_delay);
         }
     }
 }

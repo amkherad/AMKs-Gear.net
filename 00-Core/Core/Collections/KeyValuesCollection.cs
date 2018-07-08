@@ -60,7 +60,7 @@ namespace AMKsGear.Core.Collections
         {
             private readonly KeyValuesCollection<TKey, TValue> _parent;
             private int _currentIndex = 0;
-            private int _currentSubIndex = 0;
+            private int _currentSubIndex = -1;
             //private TKey _currentKey;
 
 
@@ -108,7 +108,7 @@ namespace AMKsGear.Core.Collections
             public void Reset()
             {
                 _currentIndex = 0;
-                _currentSubIndex = 0;
+                _currentSubIndex = -1;
             }
 
             object IEnumerator.Current

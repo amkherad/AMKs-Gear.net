@@ -42,17 +42,17 @@ namespace AMKsGear.AppLayer.Core.CacheManager
             _contents = new Dictionary<TContentDescriptor, TContent>(dictionary, comparer);
         }
 
-        public CacheService(IEnumerable<KeyValuePair<TContentDescriptor, TContent>> collection)
-        {
-            _contents = new Dictionary<TContentDescriptor, TContent>(collection);
-        }
+//        public CacheService(IEnumerable<KeyValuePair<TContentDescriptor, TContent>> collection)
+//        {
+//            _contents = new Dictionary<TContentDescriptor, TContent>(collection);
+//        }
 
-        public CacheService(IEnumerable<KeyValuePair<TContentDescriptor, TContent>> collection,
-            IEqualityComparer<TContentDescriptor> comparer)
-        {
-            _contents = new Dictionary<TContentDescriptor, TContent>(collection, comparer);
-        }
-        
+//        public CacheService(IEnumerable<KeyValuePair<TContentDescriptor, TContent>> collection,
+//            IEqualityComparer<TContentDescriptor> comparer)
+//        {
+//            _contents = new Dictionary<TContentDescriptor, TContent>(collection, comparer);
+//        }
+//        
 
         public void Clear() => _contents.Clear();
 
