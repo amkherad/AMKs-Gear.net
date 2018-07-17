@@ -3,7 +3,6 @@ using System.Linq.Expressions;
 using System.Reflection;
 using AMKsGear.Architecture.Automation.IoC;
 using AMKsGear.Core.Linq.Expressions;
-using AMKsGear.Core.LocalizationFramework;
 
 namespace AMKsGear.Core.Automation.IoC.TypeBindings
 {

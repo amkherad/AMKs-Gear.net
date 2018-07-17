@@ -9,14 +9,14 @@ namespace AMKsGear.Core.Automation.Reflection
     {
         public static TypeInfo GetPureType(this TypeInfo type)
         {
-            if (type == null) throw new ArgumentNullException(nameof(type));
+            ThrowHelper.ThrowIfNull_Arg(type, nameof(type));
             return (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
                 ? Nullable.GetUnderlyingType(type.BaseType).GetTypeInfo()
                 : type;
         }
         public static Type GetPureType(this Type type)
         {
-            if (type == null) throw new ArgumentNullException(nameof(type));
+            ThrowHelper.ThrowIfNull_Arg(type, nameof(type));
             return (type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
                 ? Nullable.GetUnderlyingType(type)
                 : type;
@@ -24,22 +24,22 @@ namespace AMKsGear.Core.Automation.Reflection
 
         public static IEnumerable<PropertyInfo> GetReadWriteProperties(this TypeInfo type)
         {
-            if (type == null) throw new ArgumentNullException(nameof(type));
+            ThrowHelper.ThrowIfNull_Arg(type, nameof(type));
             return type.AsType().GetRuntimeProperties().Where(x => x.CanRead && x.CanWrite);
         }
         public static IEnumerable<PropertyInfo> GetReadWriteProperties(this Type type)
         {
-            if (type == null) throw new ArgumentNullException(nameof(type));
+            ThrowHelper.ThrowIfNull_Arg(type, nameof(type));
             return type.GetRuntimeProperties().Where(x => x.CanRead && x.CanWrite);
         }
         public static IEnumerable<FieldInfo> GetReadWriteFields(this TypeInfo type)
         {
-            if (type == null) throw new ArgumentNullException(nameof(type));
+            ThrowHelper.ThrowIfNull_Arg(type, nameof(type));
             return type.AsType().GetRuntimeFields();
         }
         public static IEnumerable<FieldInfo> GetReadWriteFields(this Type type)
         {
-            if (type == null) throw new ArgumentNullException(nameof(type));
+            ThrowHelper.ThrowIfNull_Arg(type, nameof(type));
             return type.GetRuntimeFields();
         }
 

@@ -2,6 +2,9 @@
 
 namespace AMKsGear.Architecture.Trace
 {
+    /// <summary>
+    /// Provides information about current application environment.
+    /// </summary>
     public interface ILoggingContext
     {
         string PlatformName { get; }

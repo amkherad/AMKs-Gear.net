@@ -4,6 +4,9 @@ using AMKsGear.Architecture.Modeling;
 
 namespace AMKsGear.Core.Modeling
 {
+    /// <summary>
+    /// Provides abstract access to parameter info.
+    /// </summary>
     public class MethodParameterDescriptor : IParameterDescriptor
     {
         public ParameterInfo ParameterInfo { get; }

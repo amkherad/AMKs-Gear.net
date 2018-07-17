@@ -11,9 +11,7 @@ namespace AMKsGear.Core.Parallelism
 
         public MonitorBlock(object lockTarget)
         {
-            if (ReferenceEquals(lockTarget, null)) throw new ArgumentNullException(nameof(lockTarget));
-
-            _lockTarget = lockTarget;
+            _lockTarget = lockTarget ?? throw new ArgumentNullException(nameof(lockTarget));
 
             Monitor.Enter(lockTarget);
         }

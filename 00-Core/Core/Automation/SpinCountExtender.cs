@@ -29,11 +29,11 @@ namespace AMKsGear.Core.Automation
 			_spinCount = initialCount;
         }
 
-		public void Increment() { Interlocked.Increment (ref _spinCount); }
-		public void Increment(int count) { Interlocked.Add (ref _spinCount, count); }
+		public int Increment() { return Interlocked.Increment (ref _spinCount); }
+		public int Increment(int count) { return Interlocked.Add (ref _spinCount, count); }
 
-		public void Decrement() { Interlocked.Decrement (ref _spinCount); }
-		public void Decrement(int count) { Interlocked.Add (ref _spinCount, -count); }
+		public int Decrement() { return Interlocked.Decrement (ref _spinCount); }
+		public int Decrement(int count) { return Interlocked.Add (ref _spinCount, -count); }
 
         public TValue Value { get; set; }
 		public int SpinCount { get { return _spinCount; } }

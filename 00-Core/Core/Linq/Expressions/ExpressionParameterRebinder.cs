@@ -5,11 +5,11 @@ namespace AMKsGear.Core.Linq.Expressions
 {
     public class ExpressionParameterRebinder : ExpressionVisitor
     {
-        private readonly Dictionary<ParameterExpression, ParameterExpression> map;
+        private readonly Dictionary<ParameterExpression, ParameterExpression> _map;
 
         public ExpressionParameterRebinder(Dictionary<ParameterExpression, ParameterExpression> map)
         {
-            this.map = map ?? new Dictionary<ParameterExpression, ParameterExpression>();
+            _map = map ?? new Dictionary<ParameterExpression, ParameterExpression>();
         }
 
         public static Expression ReplaceParameters(Dictionary<ParameterExpression, ParameterExpression> map, Expression exp)
@@ -20,7 +20,7 @@ namespace AMKsGear.Core.Linq.Expressions
         protected override Expression VisitParameter(ParameterExpression p)
         {
             ParameterExpression replacement;
-            if (map.TryGetValue(p, out replacement))
+            if (_map.TryGetValue(p, out replacement))
             {
                 p = replacement;
             }

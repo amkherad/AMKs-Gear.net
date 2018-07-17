@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using AMKsGear.Architecture.Automation.IoC;
 using AMKsGear.Architecture.Patterns;
 using AMKsGear.Core.Collections;
-using AMKsGear.Core.LocalizationFramework;
 
 namespace AMKsGear.Core.Automation.IoC
 {

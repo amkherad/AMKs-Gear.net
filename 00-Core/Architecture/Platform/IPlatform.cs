@@ -3,51 +3,37 @@ using AMKsGear.Architecture.Patterns;
 
 namespace AMKsGear.Architecture.Platform
 {
-    [Flags]
-    public enum PlatformType
-    {
-        Unknown = 0,
-
-        UserInteractivity = 0x10000000,
-
-        Desktop = UserInteractivity | 0x100000,
-        Mobile = UserInteractivity | 0x200000,
-        Web = 0x400000,
-        Service = 0x800000,
-
-        #region Desktop
-        WindowsFormsApplication = Desktop | 0x10001,
-        WpfApplication = Desktop | 0x10002,
-
-        JavaApplication = Desktop | 0x20001,
-        #endregion
-        #region Service
-        WindowsService = Service | 0x10001,
-        WebService = Service | 0x10001,
-        #endregion
-        #region Mobile
-
-        #endregion
-        #region Web
-        WebFormsApplication = Web | 0x10001,
-        MvcWebApplication = Web | 0x10002,
-
-        WebApiApplication = Web | 0x10004,
-        #endregion
-    }
-
     /// <summary>
-    /// A mechanism to provide basic platform specified information.
+    /// A mechanism to provide platform-specified information.
     /// </summary>
-    public interface IPlatform : IWrapper
+    public interface IPlatform : IAdapter
     {
+        /// <summary>
+        /// The platform which application is running on.
+        /// </summary>
         PlatformType Type { get; }
+        
+        /// <summary>
+        /// Name of the platform.
+        /// </summary>
         string Name { get; }
+        /// <summary>
+        /// Optional description about platform.
+        /// </summary>
         string Description { get; }
 
+        /// <summary>
+        /// Optional host of application.
+        /// </summary>
         string Host { get; }
 
+        /// <summary>
+        /// Application entry object.
+        /// </summary>
         Type EntryType { get; }
+        /// <summary>
+        /// Application entry if it's available.
+        /// </summary>
         object EntryIfAvailable { get; }
     }
 }

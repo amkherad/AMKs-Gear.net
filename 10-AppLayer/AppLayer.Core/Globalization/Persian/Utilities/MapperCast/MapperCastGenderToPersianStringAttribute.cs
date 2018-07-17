@@ -2,7 +2,7 @@
 using AMKsGear.Architecture.Data.Types;
 using AMKsGear.Core.AssemblyScope.AssemblyLocalization;
 using AMKsGear.Core.Automation.Object.Mapper.Annotations;
-using AMKsGear.Core.LocalizationFramework;
+using AMKsGear.Core.Localization;
 
 namespace AMKsGear.AppLayer.Core.Globalization.Persian.Utilities.MapperCast
 {

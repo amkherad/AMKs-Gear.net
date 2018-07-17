@@ -1,6 +1,6 @@
 using System;
 using System.Globalization;
-using AMKsGear.Core.LocalizationFramework;
+using AMKsGear.Core.Localization;
 
 namespace AMKsGear.AppLayer.Core.Globalization.Persian.PersianDateTime
 {

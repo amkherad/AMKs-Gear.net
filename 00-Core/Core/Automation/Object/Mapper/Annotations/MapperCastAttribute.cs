@@ -4,7 +4,7 @@ using AMKsGear.Core.Text;
 
 namespace AMKsGear.Core.Automation.Object.Mapper.Annotations
 {
-    [AttributeUsage(ConstantTable.AllProperties)]
+    [AttributeUsage(ConstantTable.AllValueMembers)]
     public class MapperCastAttribute : Attribute
     {
         internal readonly Type InternalSource;

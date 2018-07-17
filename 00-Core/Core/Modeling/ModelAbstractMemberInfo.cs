@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AMKsGear.Architecture.Automation;
+using AMKsGear.Architecture.Automation.Mapper;
 using AMKsGear.Architecture.Modeling;
 
 namespace AMKsGear.Core.Modeling
@@ -13,34 +14,34 @@ namespace AMKsGear.Core.Modeling
     {
         public virtual string Name { get; }
         public virtual Type Type { get; }
-        public virtual IEnumerable<Attribute> CustomAttributes { get; }
+        public virtual IEnumerable<object> CustomAttributes { get; }
 
-        public IValueResolver ValueResolver { get; }
+        //public IValueProv ValueResolver { get; }
         public ModelMemberInfoValueSetter ValueSetter { get; }
         public ModelMemberInfoValueGetter ValueGetter { get; }
 
         public ModelAbstractMemberInfo(
             string name,
             Type type,
-            IEnumerable<Attribute> customAttributes,
-            IValueResolver valueResolver,
+            IEnumerable<object> customAttributes,
+            //IValueResolver valueResolver,
             ModelMemberInfoValueGetter valueGetter,
             ModelMemberInfoValueSetter valueSetter)
         {
             Name = name;
             Type = type;
             CustomAttributes = customAttributes;
-            ValueResolver = valueResolver;
+            //ValueResolver = valueResolver;
             ValueGetter = valueGetter;
             ValueSetter = valueSetter;
         }
 
         public object GetUnderlyingContext() => null;
 
-        public virtual IEnumerable<Attribute> GetCustomAttributes(bool inherit)
+        public virtual IEnumerable<object> GetCustomAttributes(bool inherit)
             => CustomAttributes;
 
-        public virtual IEnumerable<Attribute> GetCustomAttributes(Type attributeType, bool inherit)
+        public virtual IEnumerable<object> GetCustomAttributes(Type attributeType, bool inherit)
             => CustomAttributes;
 
         public virtual bool IsDefined(Type attributeType, bool inherit)
@@ -48,18 +49,18 @@ namespace AMKsGear.Core.Modeling
 
         public virtual object GetValue(object instance)
         {
-            var valueResolver = ValueResolver;
-            if (valueResolver != null)
-                return valueResolver.GetValue(Name);
+//            var valueResolver = ValueResolver;
+//            if (valueResolver != null)
+//                return valueResolver.GetValue(Name);
 
             return ValueGetter?.Invoke(this, instance);
         }
 
         public virtual object GetValue(object instance, object defaultValue)
         {
-            var valueResolver = ValueResolver;
-            if (valueResolver != null)
-                return valueResolver.GetValue(Name) ?? defaultValue;
+//            var valueResolver = ValueResolver;
+//            if (valueResolver != null)
+//                return valueResolver.GetValue(Name) ?? defaultValue;
 
             return ValueGetter?.Invoke(this, instance) ?? defaultValue;
         }

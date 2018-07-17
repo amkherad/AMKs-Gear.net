@@ -1,5 +1,4 @@
 ﻿using System.Text.RegularExpressions;
-using AMKsGear.Core.LocalizationFramework;
 
 namespace AMKsGear.Core.Data.Validation.Validators
 {

@@ -2,7 +2,7 @@
 
 namespace AMKsGear.Architecture.Modeling
 {
-    public interface IMemberInfo : IWrapper
+    public interface IMemberInfo : IAdapter
     {
         string Name { get; }
     }

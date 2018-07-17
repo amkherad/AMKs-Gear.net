@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using AMKsGear.Architecture.Annotations;
 using AMKsGear.Architecture.Automation;
+using AMKsGear.Architecture.Automation.Mapper;
 using AMKsGear.Architecture.Modeling;
 using AMKsGear.Architecture.Modeling.Annotations;
 using AMKsGear.Core.Automation.IoC;
@@ -119,7 +120,7 @@ namespace AMKsGear.Core.Automation.Object.Mapper
                 if (srcDict == null)
                 {
                     if (forced)
-                        throw new InvalidOperationException(LocalizationFramework.Localization
+                        throw new InvalidOperationException(Localization.Localization
                             .Format<IAutomationLocalization, DefaultAutomationLocalization>(
                                 x => x.UnableToFillDestinationCollection));
                     return;
@@ -129,7 +130,7 @@ namespace AMKsGear.Core.Automation.Object.Mapper
                     var isSourceGeneric = srcTypeInfo.IsGenericType;
                     var destGenericArgs = destTypeInfo.GenericTypeArguments;
                     if (destGenericArgs.Length != 2)
-                        throw new InvalidOperationException(LocalizationFramework.Localization
+                        throw new InvalidOperationException(Localization.Localization
                             .Format<IAutomationLocalization, DefaultAutomationLocalization>(
                                 x => x.InvalidNumberOfGenericArguments));
                     var fillerMethodName = isSourceGeneric
@@ -154,7 +155,7 @@ namespace AMKsGear.Core.Automation.Object.Mapper
                 if (destEnum == null || srcEnum == null)
                 {
                     if (forced)
-                        throw new InvalidOperationException(LocalizationFramework.Localization
+                        throw new InvalidOperationException(Localization.Localization
                             .Format<IAutomationLocalization, DefaultAutomationLocalization>(
                                 x => x.UnableToFillDestinationCollection));
                     return;
@@ -172,7 +173,7 @@ namespace AMKsGear.Core.Automation.Object.Mapper
                     }
                     catch
                     {
-                        throw new Exception(LocalizationFramework.Localization
+                        throw new Exception(Localization.Localization
                             .Format<IAutomationLocalization, DefaultAutomationLocalization>(
                                 x => x.MapperException));
                     }
@@ -183,7 +184,7 @@ namespace AMKsGear.Core.Automation.Object.Mapper
                     if (destList == null)
                     {
                         if (forced)
-                            throw new InvalidOperationException(LocalizationFramework.Localization
+                            throw new InvalidOperationException(Localization.Localization
                                 .Format<IAutomationLocalization, DefaultAutomationLocalization>(
                                     x => x.UnableToFillDestinationCollection));
                         return;
@@ -263,7 +264,7 @@ namespace AMKsGear.Core.Automation.Object.Mapper
                             var enumerableTypesCount = enumerableTypes.Count;
                             if (enumerableTypesCount > 2)
                                 throw new InvalidOperationException(
-                                    LocalizationFramework.Localization
+                                    Localization.Localization
                                         .Format<IAutomationLocalization, DefaultAutomationLocalization>(
                                             x => x.ThereIsMoreThanOneEnumerableImplementationInDestinationType));
                             if (enumerableTypesCount == 2)
@@ -273,7 +274,7 @@ namespace AMKsGear.Core.Automation.Object.Mapper
                                 resolvedType = TypeResolver.TryCreateInstance(dictType);
                                 if (resolvedType == null)
                                     throw new InvalidOperationException(
-                                        LocalizationFramework.Localization
+                                        Localization.Localization
                                             .Format<IAutomationLocalization, DefaultAutomationLocalization>(
                                                 x => x.UnableToCreateAnInstanceOfDestination));
                             }
@@ -303,7 +304,7 @@ namespace AMKsGear.Core.Automation.Object.Mapper
                                 resolvedType = TypeResolver.TryCreateInstance(listType);
                                 if (resolvedType == null)
                                     throw new InvalidOperationException(
-                                        LocalizationFramework.Localization
+                                        Localization.Localization
                                             .Format<IAutomationLocalization, DefaultAutomationLocalization>(
                                                 x => x.UnableToCreateAnInstanceOfDestination));
                             }

@@ -1,5 +1,6 @@
 ﻿using System;
 using AMKsGear.Architecture.Automation;
+using AMKsGear.Architecture.Automation.Mapper;
 
 namespace AMKsGear.Core.Automation.Object.Mapper
 {

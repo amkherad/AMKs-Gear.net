@@ -1,6 +1,4 @@
-﻿using AMKsGear.Core.LocalizationFramework;
-
-namespace AMKsGear.Core.Data.Validation.Validators
+﻿namespace AMKsGear.Core.Data.Validation.Validators
 {
     public interface IDataValidator
     {

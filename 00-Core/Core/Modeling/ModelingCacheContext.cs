@@ -1,68 +1,70 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using AMKsGear.Architecture.Modeling;
-using AMKsGear.Core.Automation;
+using AMKsGear.Core.Data;
 
 namespace AMKsGear.Core.Modeling
 {
-    public class ModelingCacheContext : TypeCacheContext<IModelMemberInfo[]>
+    public class ModelingCacheContext : CacheContext<Type, IModelMemberInfo[]>
     {
-        #region GetMembers
-        public virtual IEnumerable<IModelMemberInfo> GetMembers(Type type,
-            Func<PropertyInfo, bool> propertySelector = null, Func<FieldInfo, bool> fieldSelector = null)
+        public ModelingCacheContext()
         {
-            IModelMemberInfo[] infos;
-            return GetState(type, out infos)
-                ? infos
-                : ModelingHelper.GetMembers(type, propertySelector, fieldSelector);
         }
-        public virtual IEnumerable<IModelMemberInfo> GetMembers(TypeInfo type,
-            Func<PropertyInfo, bool> propertySelector = null, Func<FieldInfo, bool> fieldSelector = null)
-        {
-            IModelMemberInfo[] infos;
-            return GetState(type.AsType(), out infos)
-                ? infos
-                : ModelingHelper.GetMembers(type, propertySelector, fieldSelector);
-        }
-        #endregion
 
-        #region GetProperties
+        public ModelingCacheContext(int capacity)
+            : base(capacity)
+        {
+        }
+        
+        public ModelingCacheContext(IDictionary<Type, IModelMemberInfo[]> dictionary)
+            : base(dictionary)
+        {
+        }
+        
+        public ModelingCacheContext(IDictionary<Type, IModelMemberInfo[]> dictionary,
+            IEqualityComparer<Type> comparer)
+            : base(dictionary, comparer)
+        {
+        }
+
+        
+
+        public virtual IEnumerable<IModelValueMemberInfo> GetValueMembers(Type type,
+            Func<PropertyInfo, bool> propertySelector = null, Func<FieldInfo, bool> fieldSelector = null)
+            => TryGet(type, out var infos)
+                ? infos.OfType<IModelValueMemberInfo>()
+                : ModelingHelpers.GetValueMembers(type, propertySelector, fieldSelector);
+
+        public virtual IEnumerable<IModelValueMemberInfo> GetValueMembers(TypeInfo type,
+            Func<PropertyInfo, bool> propertySelector = null, Func<FieldInfo, bool> fieldSelector = null)
+            => TryGet(type.AsType(), out var infos)
+                ? infos.OfType<IModelValueMemberInfo>()
+                : ModelingHelpers.GetValueMembers(type, propertySelector, fieldSelector);
+
         public virtual IEnumerable<IModelMemberInfo> GetProperties(Type type,
             Func<PropertyInfo, bool> propertySelector = null)
-        {
-            IModelMemberInfo[] infos;
-            return GetState(type, out infos)
+            => TryGet(type, out var infos)
                 ? infos
-                : ModelingHelper.GetProperties(type, propertySelector);
-        }
+                : ModelingHelpers.GetProperties(type, propertySelector);
+
         public virtual IEnumerable<IModelMemberInfo> GetProperties(TypeInfo type,
             Func<PropertyInfo, bool> propertySelector = null)
-        {
-            IModelMemberInfo[] infos;
-            return GetState(type.AsType(), out infos)
+            => TryGet(type.AsType(), out var infos)
                 ? infos
-                : ModelingHelper.GetProperties(type, propertySelector);
-        }
-        #endregion
+                : ModelingHelpers.GetProperties(type, propertySelector);
 
-        #region GetFields
         public virtual IEnumerable<IModelMemberInfo> GetFields(Type type,
             Func<FieldInfo, bool> fieldSelector = null)
-        {
-            IModelMemberInfo[] infos;
-            return GetState(type, out infos)
+            => TryGet(type, out var infos)
                 ? infos
-                : ModelingHelper.GetFields(type, fieldSelector);
-        }
+                : ModelingHelpers.GetFields(type, fieldSelector);
+
         public virtual IEnumerable<IModelMemberInfo> GetFields(TypeInfo type,
             Func<FieldInfo, bool> fieldSelector = null)
-        {
-            IModelMemberInfo[] infos;
-            return GetState(type.AsType(), out infos)
+            => TryGet(type.AsType(), out var infos)
                 ? infos
-                : ModelingHelper.GetFields(type, fieldSelector);
-        }
-        #endregion
+                : ModelingHelpers.GetFields(type, fieldSelector);
     }
 }

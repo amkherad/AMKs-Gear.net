@@ -17,7 +17,9 @@ namespace AMKsGear.MSTests.Core.Collections
             foreach (KeyValuePair<string, string> row in col)
             {
                 Trace.WriteLine($"{row.Key}:{row.Value}");
+                Assert.Fail();
             }
+            Assert.AreEqual(col.Count, 0);
 
             GC.KeepAlive(col);
         }

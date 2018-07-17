@@ -10,7 +10,7 @@ namespace AMKsGear.Core.Data.Serialization
     public class SerializationContext : ISerializationContext
     {
         private readonly object _instance;
-        private readonly IEnumerable<IModelMemberInfo> _members;
+        private readonly IEnumerable<IModelValueMemberInfo> _members;
 
         public static SerializationContext FromModel<TModel>(TModel model,
             Func<PropertyInfo, bool> propertySelector = null, Func<FieldInfo, bool> fieldSelector = null)
@@ -29,7 +29,7 @@ namespace AMKsGear.Core.Data.Serialization
         {
             if (instance == null) throw new ArgumentNullException(nameof(instance));
             _instance = instance;
-            _members = ModelingHelper.GetMembers(instance.GetType(), propertySelector, fieldSelector);
+            _members = ModelingHelpers.GetValueMembers(instance.GetType(), propertySelector, fieldSelector);
         }
 
         public object Instance => _instance;

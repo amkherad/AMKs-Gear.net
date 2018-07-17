@@ -15,7 +15,6 @@ namespace AMKsGear.Core.Linq.Expressions
         private const string StartsWithMethodName = nameof(String.StartsWith);
         private const string EndsWithMethodName = nameof(String.EndsWith);
 
-        #region Helpers
         public static Expression<Func<T, bool>> CreateCompareCondition<T>(string propertyName, T value, Compare compare)
         {
             var type = typeof(T);
@@ -27,9 +26,7 @@ namespace AMKsGear.Core.Linq.Expressions
                 compare);
             return Expression.Lambda<Func<T, bool>>(comparison, arg);
         }
-        #endregion
 
-        #region Builders
         //private static MethodInfo miTL = typeof(String).GetMethod("ToLower", Type.EmptyTypes);
         //private static MethodInfo miS = typeof(String).GetMethod("StartsWith", new Type[] { typeof(String) });
         //private static MethodInfo miC = typeof(String).GetMethod("Contains", new Type[] { typeof(String) });
@@ -205,6 +202,5 @@ namespace AMKsGear.Core.Linq.Expressions
                     throw new ArgumentOutOfRangeException(nameof(compare), compare, null);
             }
         }
-        #endregion
     }
 }

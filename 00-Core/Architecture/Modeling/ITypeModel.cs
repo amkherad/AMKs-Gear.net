@@ -6,7 +6,7 @@ using AMKsGear.Architecture.Annotations;
 
 namespace AMKsGear.Architecture.Modeling
 {
-    public interface ITypeModel : IWrapper
+    public interface ITypeModel : IAdapter
     {
         Type Type { get; }
         TypeInfo TypeInfo { get; }

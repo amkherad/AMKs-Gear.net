@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using AMKsGear.Architecture.Automation;
+using AMKsGear.Architecture.Automation.Mapper;
 using AMKsGear.Core.Automation.IoC;
 using AMKsGear.Core.Collections;
 using AMKsGear.Core.Modeling;
@@ -109,7 +110,7 @@ namespace AMKsGear.Core.Automation.Object.Mapper
                             resolvedType = resolver.Resolve(dictType);
                             if (resolvedType == null)
                                 throw new InvalidOperationException(
-                                    LocalizationFramework.Localization
+                                    Localization.Localization
                                         .Format<IAutomationLocalization, DefaultAutomationLocalization>(
                                             x => x.UnableToCreateAnInstanceOfDestination));
                         }
@@ -123,7 +124,7 @@ namespace AMKsGear.Core.Automation.Object.Mapper
                             resolvedType = resolver.Resolve(listType);
                             if (resolvedType == null)
                                 throw new InvalidOperationException(
-                                    LocalizationFramework.Localization
+                                    Localization.Localization
                                         .Format<IAutomationLocalization, DefaultAutomationLocalization>(
                                             x => x.UnableToCreateAnInstanceOfDestination));
                         }

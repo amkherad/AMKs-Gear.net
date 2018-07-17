@@ -3,7 +3,7 @@ using AMKsGear.Architecture.Patterns;
 
 namespace AMKsGear.Architecture.Parallelism
 {
-    public interface ISyncBlock : IDisposable, IWrapper
+    public interface ISyncBlock : IDisposable, IAdapter
     {
 
     }

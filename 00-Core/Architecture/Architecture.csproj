@@ -22,4 +22,7 @@
     <OutputPath>../../.output/Release/</OutputPath>
     <DefineConstants>TRACE;RELEASE;NETCOREAPP;NETCOREAPP2_0</DefineConstants>
   </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="Modeling\Builders" />
+  </ItemGroup>
 </Project>

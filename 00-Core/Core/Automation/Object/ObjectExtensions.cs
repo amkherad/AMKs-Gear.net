@@ -14,8 +14,7 @@ namespace AMKsGear.Core.Automation.Object
         //        .CreateDelegate(typeof(TDelegate), @object);
         //}
         #endregion
-            
-        #region GetPureType
+        
         public static Type GetPureType(this object @object)
         {
             if (@object == null) throw new ArgumentNullException(nameof(@object));
@@ -42,10 +41,13 @@ namespace AMKsGear.Core.Automation.Object
                 ? Nullable.GetUnderlyingType(baseType)
                 : baseType;
         }
-        #endregion
 
-        #region Utils
-        public static TResult DoAs<T, TResult>(this T obj, Func<T, TResult> action) => (action ?? (x => default(TResult))).Invoke(obj);
+
+        public static TResult DoAs<T, TResult>(this T obj, Func<T, TResult> action)
+        {
+            return (action ?? (x => default(TResult))).Invoke(obj);
+        }
+            
         public static T ModifyAs<T>(this T obj, Action<T> action)
         {
             action?.Invoke(obj);
@@ -62,6 +64,5 @@ namespace AMKsGear.Core.Automation.Object
         //    if (obj == null) throw new ArgumentNullException(nameof(obj));
         //    return obj.GetType() == type || obj.GetType().GetTypeInfo().IsSubclassOf(type);
         //}
-        #endregion
     }
 }

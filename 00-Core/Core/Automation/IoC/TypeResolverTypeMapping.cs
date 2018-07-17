@@ -5,7 +5,6 @@ using System.Runtime.CompilerServices;
 using AMKsGear.Architecture.Patterns;
 using AMKsGear.Core.Automation.IoC.LifetimeManagers;
 using AMKsGear.Core.Automation.Reflection;
-using AMKsGear.Core.LocalizationFramework;
 
 namespace AMKsGear.Core.Automation.IoC
 {

@@ -2,8 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using AMKsGear.Architecture.Data.Serialization.Annotations;
+using AMKsGear.Core.Localization;
 //using AMKsGear.Architecture.Framework.Legacy;
-using AMKsGear.Core.LocalizationFramework;
 
 namespace AMKsGear.AppLayer.Core.Globalization.Persian.PersianDateTime
 {

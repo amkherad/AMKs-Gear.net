@@ -4,7 +4,7 @@ using AMKsGear.Architecture.Annotations;
 
 namespace AMKsGear.Core.Automation.Object.Mapper.Annotations
 {
-    [AttributeUsage(ConstantTable.AllProperties)]
+    [AttributeUsage(ConstantTable.AllValueMembers)]
     public class MapperEvaluateAttribute : OrderedAttribute
     {
         internal readonly Type InternalSource;

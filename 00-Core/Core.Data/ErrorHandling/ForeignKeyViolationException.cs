@@ -1,5 +1,4 @@
-﻿using AMKsGear.Core.LocalizationFramework;
-using AMKsGear.Core.Data.AssemblyScope.AssemblyLocalization;
+﻿using AMKsGear.Core.Data.AssemblyScope.AssemblyLocalization;
 
 namespace AMKsGear.Core.Data.ErrorHandling
 {

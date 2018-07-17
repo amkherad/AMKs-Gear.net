@@ -3,7 +3,7 @@ using AMKsGear.Architecture.Patterns;
 
 namespace AMKsGear.Architecture.Modeling
 {
-    public interface IParameterDescriptor : IWrapper
+    public interface IParameterDescriptor : IAdapter
     {
         string Name { get; }
         Type Type { get; }

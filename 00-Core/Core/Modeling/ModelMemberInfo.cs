@@ -36,10 +36,6 @@ namespace AMKsGear.Core.Modeling
 
         public object GetUnderlyingContext() => MemberInfo;
 
-        #region Extended Members
-
-        #endregion
-
         #region MemberInfo Members
         public virtual IEnumerable<CustomAttributeData> CustomAttributes => MemberInfo.CustomAttributes;
         //public Type DeclaringType => MemberInfo.DeclaringType;
@@ -48,16 +44,11 @@ namespace AMKsGear.Core.Modeling
         public Type Type => MemberType;
         //public Type ReflectedType => TargetTypeInfo.;
 
-        public IEnumerable<Attribute> GetCustomAttributes(bool inherit) => MemberInfo.GetCustomAttributes(inherit).Cast<Attribute>();
-        public IEnumerable<Attribute> GetCustomAttributes(Type attributeType, bool inherit) => MemberInfo.GetCustomAttributes(attributeType, inherit).Cast<Attribute>();
+        public IEnumerable<object> GetCustomAttributes(bool inherit) => MemberInfo.GetCustomAttributes(inherit).Cast<Attribute>();
+        public IEnumerable<object> GetCustomAttributes(Type attributeType, bool inherit) => MemberInfo.GetCustomAttributes(attributeType, inherit).Cast<Attribute>();
 
 
         public bool IsDefined(Type attributeType, bool inherit) => MemberInfo.IsDefined(attributeType, inherit);
-
-        public abstract object GetValue(object instance);
-        public abstract object GetValue(object instance, object defaultValue);
-
-        public abstract void SetValue(object instance, object value);
 
         #endregion
 

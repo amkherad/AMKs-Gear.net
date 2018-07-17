@@ -1,15 +1,10 @@
 ﻿namespace AMKsGear.Architecture.Patterns
 {
+    /// <summary>
+    /// Provides access to a value when needed.
+    /// </summary>
     public interface ILazyValue
     {
         object GetValue();
-    }
-    public interface ILazyValue<T> : ILazyValue
-    {
-        new T GetValue();
-    }
-    public interface ILazyValueGeneric<T>
-    {
-        T GetValue();
     }
 }

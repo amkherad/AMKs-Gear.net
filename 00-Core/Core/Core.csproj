@@ -29,5 +29,21 @@
     <Compile Include="..\..\-Shared\SharedAssemblyInfo.cs">
       <Link>AssemblyScope/SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Remove="Automation\IoC\**" />
+    <Compile Remove="Automation\Object\Mapper\**" />
+    <Compile Remove="Trace\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Automation\Mapper\Builder" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Remove="Automation\IoC\**" />
+    <EmbeddedResource Remove="Automation\Object\Mapper\**" />
+    <EmbeddedResource Remove="Trace\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Automation\IoC\**" />
+    <None Remove="Automation\Object\Mapper\**" />
+    <None Remove="Trace\**" />
   </ItemGroup>
 </Project>

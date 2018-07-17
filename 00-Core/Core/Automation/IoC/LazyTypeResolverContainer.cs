@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using AMKsGear.Architecture.Automation;
+using AMKsGear.Architecture.Automation.IoC;
 
 namespace AMKsGear.Core.Automation.IoC
 {
