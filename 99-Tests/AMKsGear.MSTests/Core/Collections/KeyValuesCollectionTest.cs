@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using AMKsGear.Core.Collections;
@@ -9,6 +10,12 @@ namespace AMKsGear.MSTests.Core.Collections
     [TestClass]
     public class KeyValuesCollectionTest
     {
+        [TestMethod]
+        public void XXX()
+        {
+            Trace.Write(typeof(IEnumerable).GetHashCode());
+            Trace.Write(typeof(IEnumerable<>).GetHashCode());
+        }
         [TestMethod]
         public void NameStringCollectionTestEmpty()
         {

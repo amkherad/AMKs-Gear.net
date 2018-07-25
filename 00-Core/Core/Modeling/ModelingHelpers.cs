@@ -10,6 +10,9 @@ namespace AMKsGear.Core.Modeling
 {
     public static partial class ModelingHelpers
     {
+        
+        
+        
         public static IEnumerable<T> OrderMemberInfos<T>(IEnumerable<T> collection) where T : IModelMemberInfo
         {
             if (collection == null) throw new ArgumentNullException(nameof(collection));

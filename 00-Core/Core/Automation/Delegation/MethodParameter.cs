@@ -18,7 +18,7 @@ namespace AMKsGear.Core.Automation.Delegation
             {
                 if (_useDefaultValue)
                     return _defaultValue;
-                return ParameterType.GetDefault();
+                return ParameterType.IsValueType ? Activator.CreateInstance(ParameterType) : null;
             }
             set
             {

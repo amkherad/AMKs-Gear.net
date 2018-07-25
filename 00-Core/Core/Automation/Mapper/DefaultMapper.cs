@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using AMKsGear.Architecture.Annotations;
 using AMKsGear.Architecture.Automation.Mapper;
 using AMKsGear.Architecture.Linq.Expressions;
+using AMKsGear.Core.Linq.Expressions;
 
 namespace AMKsGear.Core.Automation.Mapper
 {
@@ -66,8 +67,22 @@ namespace AMKsGear.Core.Automation.Mapper
             return true;
         }
         
+        /// <summary>
+        /// Validates values passed to method, and changes them if required (specified in options).
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        protected bool ValidateParameters<TDestination, TSource>(IQueryable<TSource> source, object[] options)
+        {
+            source = source;
+            return true;
+        }
+        
         
         /// <inheritdoc />
+        /// <exception cref="MapperException"></exception>
+        [Throws(typeof(MapperException))]
         public void SourceToDestination(Type destType, object destination, Type srcType, object source, object[] options)
         {
             if (!ValidateParameters(destType, ref destination, srcType, ref source, options))
@@ -122,9 +137,22 @@ namespace AMKsGear.Core.Automation.Mapper
         /// <inheritdoc />
         public IQueryable<TDestination> Project<TDestination, TSource>(IQueryable<TSource> source, object[] options)
         {
+            if (!ValidateParameters<TDestination, TSource>(source, options))
+            {
+                ThrowValidationException();
+            }
+
+            var expression = GetProjectionExpression<TDestination, TSource>(options);
+            if (expression == null)
+            {
+                
+            }
+
             throw new NotImplementedException();
         }
 
+        
+        
         /// <inheritdoc />
         public Func<object, object> GetMapFunction(Type destType, Type srcType, object[] options)
         {

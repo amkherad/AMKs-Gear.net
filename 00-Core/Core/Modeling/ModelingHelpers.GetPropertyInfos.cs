@@ -8,6 +8,21 @@ namespace AMKsGear.Core.Modeling
 {
     public static partial class ModelingHelpers
     {
+        public static IEnumerable<PropertyInfo> GetPropertyInfos(Type type, BindingFlags bindingFlags)
+        {
+            if (type == null) throw new ArgumentNullException(nameof(type));
+
+            var props = type.GetProperties(bindingFlags);
+
+            type.GetCustomAttribute(typeof(ModelSelfDescribedMembersAttribute), true);
+            if (type.IsDefined(typeof(ModelSelfDescribedMembersAttribute), true))
+            {
+                return props.Where(x => x.IsDefined(typeof(ModelIncludeAttribute), true));
+            }
+
+            return props.Where(x => !x.IsDefined(typeof(ModelExcludeAttribute), true));
+        }
+        
         public static IEnumerable<PropertyInfo> GetPropertyInfos(Type type, Func<PropertyInfo, bool> selector = null)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
