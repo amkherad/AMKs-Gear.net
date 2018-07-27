@@ -1,7 +1,7 @@
 using AMKsGear.Core.Linq.Convert;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace AMKsGear.MSTests.Core.Linq.Convert
+namespace AMKsGear.MSTests.Core.LinqTesting.ConvertTesting
 {
     [TestClass]
     public class StringConvertTests : ConvertTestBase

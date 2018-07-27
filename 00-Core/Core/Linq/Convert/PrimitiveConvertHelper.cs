@@ -6,7 +6,7 @@ using AMKsGear.Core.Automation.Reflection;
 
 namespace AMKsGear.Core.Linq.Convert
 {
-    public abstract class PrimitiveConvertHelper<TPrimitive> : ITypeConvertHelper
+    public abstract class PrimitiveConvertHelper : ITypeConvertHelper
     {
         public bool AllowNullableTypes { get; set; }
         
@@ -29,39 +29,41 @@ namespace AMKsGear.Core.Linq.Convert
         public virtual bool CanConvert(Type type)
         {
             return IsPrimitiveOrDecimal(type) ||
-                   (AllowNullableTypes && type.IsGenericType &&
-                    type.GetGenericTypeDefinition() == typeof(Nullable<>)
-                       ? IsPrimitiveOrDecimal(Nullable.GetUnderlyingType(type))
+                   (AllowNullableTypes && type.IsNullable(out var nullableBaseType)
+                       ? IsPrimitiveOrDecimal(nullableBaseType)
                        : throw TypeConvertHelper.ConvertException(type));
         }
 
-        public virtual Expression CreateInlineConvertExpression(Expression source)
+        public virtual Expression CreateInlineConvertExpression(Expression source, Type destinationType)
             => AllowNullableTypes
-                ? ConvertInlineExpressionAllowNullable(source)
-                : ConvertInlineExpressionNoNullable(source);
+                ? ConvertInlineExpressionAllowNullable(source, destinationType)
+                : ConvertInlineExpressionNoNullable(source, destinationType);
 
-        public Expression CreateInlineConvertExpressionQueryableSafe(Expression source)
-        {
-            throw new NotImplementedException();
-        }
+        public Expression CreateInlineConvertExpressionQueryableSafe(Expression source, Type destinationType)
+            => AllowNullableTypes
+                ? ConvertInlineExpressionAllowNullable(source, destinationType)
+                : ConvertInlineExpressionNoNullable(source, destinationType);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected virtual Expression ConvertInlineExpressionAllowNullable(Expression source)
+        public static Expression ConvertInlineExpressionAllowNullable(Expression source, Type destinationType)
         {
             var convert = source;
             var sourceType = source.Type;
-            var destinationType = typeof(TPrimitive);
 
             if (sourceType != destinationType)
             {
                 if (sourceType.IsNullable(out var nullableBaseType))
+                {
                     convert = Expression.Convert(convert, nullableBaseType);
+                }
                 //var destType = destinationType.GetTypeOrNullableBaseType();
 
 //                if (convert.Type != destType)
 //                    convert = ConvertType(convert, destType, arg);
                 if (convert.Type != destinationType)
+                {
                     convert = Expression.Convert(convert, destinationType);
+                }
 
                 if (!sourceType.IsValueType || sourceType.IsNullable())
                 {
@@ -75,10 +77,8 @@ namespace AMKsGear.Core.Linq.Convert
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected virtual Expression ConvertInlineExpressionNoNullable(Expression source)
+        public static Expression ConvertInlineExpressionNoNullable(Expression source, Type destinationType)
         {
-            var destinationType = typeof(TPrimitive);
-            
             if (source.Type != destinationType)
             {
                 source = Expression.Convert(source, destinationType);

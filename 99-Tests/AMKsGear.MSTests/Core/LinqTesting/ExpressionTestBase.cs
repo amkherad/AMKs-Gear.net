@@ -1,7 +1,7 @@
 using System;
 using System.Linq.Expressions;
 
-namespace AMKsGear.MSTests.Core.Linq
+namespace AMKsGear.MSTests.Core.LinqTesting
 {
     public class ExpressionTestBase
     {

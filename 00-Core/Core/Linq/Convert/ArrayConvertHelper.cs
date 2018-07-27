@@ -100,14 +100,16 @@ namespace AMKsGear.Core.Linq.Convert
                 typeof(Enumerable).GetMethod(nameof(Enumerable.ToArray)),
                 enumerableSource
             );
+
+            return toArray;
         }
         
-        public Expression CreateInlineConvertExpression(Expression source)
+        public Expression CreateInlineConvertExpression(Expression source, Type destinationType)
         {
-            
+            throw new NotSupportedException();
         }
 
-        public Expression CreateInlineConvertExpressionQueryableSafe(Expression source)
+        public Expression CreateInlineConvertExpressionQueryableSafe(Expression source, Type destinationType)
         {
             throw new NotSupportedException();
         }

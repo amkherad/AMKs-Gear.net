@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using AMKsGear.Architecture.Data;
-using AMKsGear.Architecture.LifetimeManagers;
 
 namespace AMKsGear.Core.Data.AbstractInterface
 {
@@ -291,11 +290,6 @@ namespace AMKsGear.Core.Data.AbstractInterface
         public TProperty Min<TProperty>(Expression<Func<TEntity, TProperty>> selector, TOptions options)
             => ApplyOptions(Queryable, options).Min(selector);
         #endregion
-        #endregion
-
-        #region LifetimeManaging
-        public abstract IActionBlock BeginActionBlock();
-        public abstract ITransaction BeginTransaction();
         #endregion
     }
 }

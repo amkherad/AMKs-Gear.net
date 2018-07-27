@@ -5,8 +5,11 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using AMKsGear.Architecture.Annotations;
+using AMKsGear.Architecture.Automation;
 using AMKsGear.Architecture.Automation.Mapper;
 using AMKsGear.Architecture.Linq.Expressions;
+using AMKsGear.Core.Automation.Mapper.Annotations;
+using AMKsGear.Core.Data;
 using AMKsGear.Core.Linq.Expressions;
 
 namespace AMKsGear.Core.Automation.Mapper
@@ -14,29 +17,32 @@ namespace AMKsGear.Core.Automation.Mapper
     /// <summary>
     /// A simple object mapper with support of queryable projection.
     /// </summary>
-    public class DefaultMapper
+    public class Mapper
         : IMapper, IMapperQueryableSupport,
             IMapperEx, IMapperQueryableSupportEx
     {
         public IExpressionCompiler ExpressionCompiler { get; }
-        
-        
+
+        public MapperContext Context { get; }
+
         /// <summary>
-        /// Creates a new instance of <see cref="DefaultMapper"/>.
+        /// Creates a new instance of <see cref="Mapper"/>.
         /// </summary>
         /// <param name="expressionCompiler">The compiler to compile expressions.</param>
-        public DefaultMapper(IExpressionCompiler expressionCompiler)
+        /// <param name="mapperContext"></param>
+        public Mapper(IExpressionCompiler expressionCompiler, MapperContext mapperContext)
         {
-            ExpressionCompiler = expressionCompiler;
+            ExpressionCompiler = expressionCompiler ?? throw new ArgumentNullException(nameof(expressionCompiler));
+            Context = mapperContext ?? throw new ArgumentNullException(nameof(mapperContext));
         }
 
         /// <inheritdoc />
-        public DefaultMapper()
-            : this(InternalExpressionCompiler.Instance)
+        public Mapper()
+            : this(InternalExpressionCompiler.Instance, new MapperContext())
         {
         }
-        
-        
+
+
         /// <summary>
         /// Validates values passed to method, and changes them if required (specified in options).
         /// </summary>
@@ -46,13 +52,14 @@ namespace AMKsGear.Core.Automation.Mapper
         /// <param name="source"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        protected bool ValidateParameters(Type destType, ref object destination, Type srcType, ref object source, object[] options)
+        protected bool ValidateParameters(Type destType, ref object destination, Type srcType, ref object source,
+            object[] options)
         {
             destination = destination;
             source = source;
             return true;
         }
-        
+
         /// <summary>
         /// Validates values passed to method, and changes them if required (specified in options).
         /// </summary>
@@ -60,13 +67,14 @@ namespace AMKsGear.Core.Automation.Mapper
         /// <param name="source"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        protected bool ValidateParameters<TDestination, TSource>(ref TDestination destination, ref TSource source, object[] options)
+        protected bool ValidateParameters<TDestination, TSource>(ref TDestination destination, ref TSource source,
+            object[] options)
         {
             destination = destination;
             source = source;
             return true;
         }
-        
+
         /// <summary>
         /// Validates values passed to method, and changes them if required (specified in options).
         /// </summary>
@@ -78,18 +86,25 @@ namespace AMKsGear.Core.Automation.Mapper
             source = source;
             return true;
         }
+
+
+        public void Compile()
+        {
+            
+        }
         
-        
+
         /// <inheritdoc />
         /// <exception cref="MapperException"></exception>
         [Throws(typeof(MapperException))]
-        public void SourceToDestination(Type destType, object destination, Type srcType, object source, object[] options)
+        public void SourceToDestination(Type destType, object destination, Type srcType, object source,
+            object[] options)
         {
             if (!ValidateParameters(destType, ref destination, srcType, ref source, options))
             {
                 ThrowValidationException();
             }
-            
+
             var mapper = GetMapAction(destType, srcType, options);
 
             mapper(destination, source);
@@ -98,20 +113,22 @@ namespace AMKsGear.Core.Automation.Mapper
         /// <inheritdoc />
         /// <exception cref="MapperException"></exception>
         [Throws(typeof(MapperException))]
-        public void SourceToDestination<TDestination, TSource>(TDestination destination, TSource source, object[] options)
+        public void SourceToDestination<TDestination, TSource>(TDestination destination, TSource source,
+            object[] options)
         {
             if (!ValidateParameters(ref destination, ref source, options))
             {
                 ThrowValidationException();
             }
-            
+
             var mapper = GetMapAction<TDestination, TSource>(options);
 
             mapper(destination, source);
         }
 
         /// <inheritdoc />
-        public void SourceToDestination(Type destType, object destination, IMapperValueProvider valueProvider, object[] options)
+        public void SourceToDestination(Type destType, object destination, IMapperValueProvider valueProvider,
+            object[] options)
         {
             throw new NotImplementedException();
         }
@@ -145,14 +162,12 @@ namespace AMKsGear.Core.Automation.Mapper
             var expression = GetProjectionExpression<TDestination, TSource>(options);
             if (expression == null)
             {
-                
             }
 
             throw new NotImplementedException();
         }
 
-        
-        
+
         /// <inheritdoc />
         public Func<object, object> GetMapFunction(Type destType, Type srcType, object[] options)
         {

@@ -30,8 +30,8 @@
 //        }
 //
 //        public virtual void FillLeftFromRight(TLeft left, TRight right, object context)
-//            => Mapper.MapConfig(left, right, DefaultMapper.Configuration.CaseInsensetiveMapping);
+//            => Mapper.MapConfig(left, right, Mapper.Configuration.CaseInsensetiveMapping);
 //        public virtual void FillRightFromLeft(TRight right, TLeft left, object context)
-//            => Mapper.MapConfig(right, left, DefaultMapper.Configuration.CaseInsensetiveMapping);
+//            => Mapper.MapConfig(right, left, Mapper.Configuration.CaseInsensetiveMapping);
 //    }
 //}

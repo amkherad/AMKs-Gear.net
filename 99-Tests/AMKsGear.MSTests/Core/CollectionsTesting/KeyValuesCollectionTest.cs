@@ -5,17 +5,11 @@ using System.Diagnostics;
 using AMKsGear.Core.Collections;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace AMKsGear.MSTests.Core.Collections
+namespace AMKsGear.MSTests.Core.CollectionsTesting
 {
     [TestClass]
     public class KeyValuesCollectionTest
     {
-        [TestMethod]
-        public void XXX()
-        {
-            Trace.Write(typeof(IEnumerable).GetHashCode());
-            Trace.Write(typeof(IEnumerable<>).GetHashCode());
-        }
         [TestMethod]
         public void NameStringCollectionTestEmpty()
         {

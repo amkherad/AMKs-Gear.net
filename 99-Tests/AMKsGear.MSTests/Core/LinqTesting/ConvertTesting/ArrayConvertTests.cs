@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 using AMKsGear.Core.Linq.Convert;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace AMKsGear.MSTests.Core.Linq.Convert
+namespace AMKsGear.MSTests.Core.LinqTesting.ConvertTesting
 {
     [TestClass]
     public class ArrayConvertTests : ConvertTestBase
@@ -48,6 +48,23 @@ namespace AMKsGear.MSTests.Core.Linq.Convert
             
             Assert.AreEqual(10, dest[0]);
             Assert.AreEqual(20, dest[1]);
+        }
+        
+        [TestMethod]
+        public void TestCreateToArrayExpression()
+        {
+//            var src = new List<int>()
+//            {
+//                10, 20, 65, 77, 23
+//            };
+
+//            var srcParam = Expression.Parameter(typeof(List<int>));
+//            var exp = ArrayConvertHelper.CreateCopyArrayExpression(srcParam, destParam);
+//            var act = Expression.Lambda<Action<int[], int[]>>(exp, srcParam, destParam).Compile();
+//            act(src, dest);
+//            
+//            Assert.AreEqual(10, dest[0]);
+//            Assert.AreEqual(20, dest[1]);
         }
         
     }

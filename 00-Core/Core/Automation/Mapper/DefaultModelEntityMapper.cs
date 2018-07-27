@@ -27,9 +27,9 @@
 //            return result;
 //        }
 //        public virtual void FillModelFromEntity(TModel model, TEntity entity, object context)
-//            => Mapper.MapConfig(model, entity, DefaultMapper.Configuration.CaseInsensetiveMapping);
+//            => Mapper.MapConfig(model, entity, Mapper.Configuration.CaseInsensetiveMapping);
 //        public virtual void FillEntityFromModel(TEntity entity, TModel model, object context)
-//            => Mapper.MapConfig(entity, model, DefaultMapper.Configuration.CaseInsensetiveMapping);
+//            => Mapper.MapConfig(entity, model, Mapper.Configuration.CaseInsensetiveMapping);
 //
 //
 //

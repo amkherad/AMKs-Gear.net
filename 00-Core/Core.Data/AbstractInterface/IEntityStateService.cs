@@ -6,7 +6,7 @@ using AMKsGear.Architecture.Patterns;
 
 namespace AMKsGear.Core.Data.AbstractInterface
 {
-    public interface IEntityStateService<in TOptions> : IWrapper
+    public interface IEntityStateService<in TOptions> : IAdapter
         where TOptions : ICrudServiceOptions
     {
         bool Any(TOptions options);

@@ -16,4 +16,8 @@
       <ProjectReference Include="..\..\00-Core\Core\Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Core\MapperTesting\artefacts" />
+    </ItemGroup>
+
 </Project>

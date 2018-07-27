@@ -90,20 +90,6 @@ namespace AMKsGear.Core.Collections
         }
         #endregion
 
-        #region Edit
-        public static IEnumerable<TEnumerable> Edit<TEnumerable>(
-            this IEnumerable<TEnumerable> enumerable,
-            Func<TEnumerable, TEnumerable> predicate)
-        { return enumerable.Select(predicate); }
-        public static IEnumerable<TEnumerable> Edit<TEnumerable>(
-            this IEnumerable<TEnumerable> enumerable,
-            Func<TEnumerable, bool> predicate, Func<TEnumerable, TEnumerable> editor)
-        {
-            return enumerable.Select(element => predicate(element) ? editor(element) : element);
-        }
-
-        #endregion
-
         #region Distinct
         public static IEnumerable<TEnumerable> Distinct<TEnumerable>(
             this IEnumerable<TEnumerable> enumerable, Func<TEnumerable, object> predicate)
@@ -192,12 +178,5 @@ namespace AMKsGear.Core.Collections
                 : enumerable.OrderBy(selector);
         }
         #endregion
-
-        //#region ToXXX's
-        //public static Task<List<TElement>> ToListAsync<TElement>(this IEnumerable<TElement> enumerable)
-        //{ return Task.Run(() => enumerable.ToList()); }
-        //public static Task<TElement[]> ToArrayAsync<TElement>(this IEnumerable<TElement> enumerable)
-        //{ return Task.Run(() => enumerable.ToArray()); }
-        //#endregion
     }
 }

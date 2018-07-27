@@ -30,7 +30,7 @@ namespace AMKsGear.Core.Linq.Convert
                    type == typeof(decimal);
         }
 
-        public Expression CreateInlineConvertExpression(Expression source)
+        public Expression CreateInlineConvertExpression(Expression source, Type destinationType)
         {
             if (source.Type == typeof(string))
             {
@@ -42,7 +42,7 @@ namespace AMKsGear.Core.Linq.Convert
             return source;
         }
 
-        public Expression CreateInlineConvertExpressionQueryableSafe(Expression source)
+        public Expression CreateInlineConvertExpressionQueryableSafe(Expression source, Type destinationType)
         {
             if (source.Type == typeof(string))
             {
@@ -52,11 +52,6 @@ namespace AMKsGear.Core.Linq.Convert
             source = Expression.Call(source, source.Type.GetMethod("ToString", Type.EmptyTypes));
 
             return source;
-        }
-
-
-        public Expression CreateInlineConvertExpression(Expression source, Type fromType)
-        {
         }
     }
 }

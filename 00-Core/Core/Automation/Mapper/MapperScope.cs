@@ -19,8 +19,6 @@ namespace AMKsGear.Core.Automation.Mapper
         public MapperContext Context { get; protected set; }
 
 
-        #region Constructors
-
         /// <summary>
         /// Creates a new instance of <see cref="MapperScope"/> using an empty context.
         /// </summary>
@@ -58,9 +56,7 @@ namespace AMKsGear.Core.Automation.Mapper
             ParentScope = parentScope;
         }
 
-        #endregion
-        
-        
+
         public void Dispose()
         {
         }

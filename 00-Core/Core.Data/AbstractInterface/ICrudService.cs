@@ -7,7 +7,7 @@ using AMKsGear.Architecture.Patterns;
 
 namespace AMKsGear.Core.Data.AbstractInterface
 {
-    public interface ICrudService<in TOptions> : IWrapper, IServiceProvider
+    public interface ICrudService<in TOptions> : IAdapter, IServiceProvider
         where TOptions : ICrudServiceOptions
     {
         /// <summary>
