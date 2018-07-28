@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace AMKsGear.Architecture.Data
 {
     /// <summary>
@@ -5,7 +7,7 @@ namespace AMKsGear.Architecture.Data
     /// </summary>
     /// <typeparam name="TContentDescriptor">The identifier to the unique content.</typeparam>
     /// <typeparam name="TContent">The type of the content which cache service used for.</typeparam>
-    public interface ICacheContext<in TContentDescriptor, TContent> : ICacheContext
+    public interface ICacheContext<TContentDescriptor, TContent> : ICacheContext
     {
         /// <summary>
         /// Returns the cached content only if exists otherwise return default value.
@@ -43,6 +45,13 @@ namespace AMKsGear.Architecture.Data
         /// <param name="content">The content to store with specified descriptor.</param>
         /// <returns>A boolean determining if the content is new or overwritten (true if already existed).</returns>
         bool Cache(TContentDescriptor descriptor, TContent content);
+        
+        /// <summary>
+        /// Adds a list of content to cache list.
+        /// </summary>
+        /// <param name="entries">A dictionary of entries to be added to list.</param>
+        /// <returns>A number of entries inserted.</returns>
+        int CacheAll(IDictionary<TContentDescriptor, TContent> entries);
         
         /// <summary>
         /// Misses the cache entry.

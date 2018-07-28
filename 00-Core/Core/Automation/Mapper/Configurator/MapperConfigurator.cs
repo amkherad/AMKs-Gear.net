@@ -10,8 +10,7 @@ namespace AMKsGear.Core.Automation.Mapper.Configurator
 
         private ICollection<IMap> _maps;
 
-        public bool CustomMappingEnabled { get; set; }
-        public bool CustomMappingCacheEnabled { get; set; }
+        public bool OnTheFlyMapping { get; set; }
 
 
         public MapperConfigurator(Mapper mapper)
@@ -77,6 +76,46 @@ namespace AMKsGear.Core.Automation.Mapper.Configurator
             return map;
         }
 
+        
+        public Map CreateMap(Type destinationType, Type sourceType)
+        {
+            ThrowIfDisposed();
+
+            var map = new Map(this, destinationType, sourceType);
+
+            _maps.Add(map);
+
+            return map;
+        }
+
+        public Map CreateMap(Type destinationType, Type sourceType, bool twoWay)
+        {
+            ThrowIfDisposed();
+
+            var map = new Map(this, destinationType, sourceType)
+            {
+                IsTwoWay = twoWay
+            };
+
+            _maps.Add(map);
+
+            return map;
+        }
+
+        public Map CreateMap(Type destinationType, Type sourceType, MappingType mappingType)
+        {
+            ThrowIfDisposed();
+
+            var map = new Map(this, destinationType, sourceType)
+            {
+                MappingType = mappingType
+            };
+
+            _maps.Add(map);
+
+            return map;
+        }
+
 
         /// <summary>
         /// Removes a map from context. (both destination-to-source and source-to-destination)
@@ -108,15 +147,9 @@ namespace AMKsGear.Core.Automation.Mapper.Configurator
         }
 
 
-        public MapperConfigurator AllowCustomMapping(bool state)
+        public MapperConfigurator AllowOnTheFlyMapping(bool state = true)
         {
-            CustomMappingEnabled = state;
-            return this;
-        }
-
-        public MapperConfigurator AllowCustomMappingCache(bool state)
-        {
-            CustomMappingCacheEnabled = state;
+            OnTheFlyMapping = state;
             return this;
         }
 
@@ -138,8 +171,20 @@ namespace AMKsGear.Core.Automation.Mapper.Configurator
                 rows.AddRange(map.CreateRows());
             }
 
+            var context = Context;
+            
             //single call to ensure locking.
-            Context.AddRange(rows);
+            context.AddRange(rows);
+
+            if (OnTheFlyMapping)
+            {
+                if (context.IsConfigured)
+                {
+                    context.AllowOnTheFlyMapping = true;
+                }
+            }
+
+            context.IsConfigured = true;
         }
 
         public void Dispose()

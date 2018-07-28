@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using AMKsGear.Architecture.Annotations;
 using AMKsGear.Architecture.Automation;
 using AMKsGear.Architecture.Automation.Mapper;
@@ -90,9 +91,26 @@ namespace AMKsGear.Core.Automation.Mapper
 
         public void Compile()
         {
+            var context = Context;
+            var entries = context.GetMappingsWithoutCompiledInfo();
             
+            var compiled = new Dictionary<int, MappingCompiledInfo>();
+
+            lock (context.CompileLockTarget)
+            {
+                foreach (var entry in entries)
+                {
+                    var compiledInfo = Compiler.CompileMapping(this, context, entry.Value);
+                    compiled.Add(entry.Key, compiledInfo);
+                }
+            }
+
+            if (compiled.Count > 0)
+            {
+                context.CacheCompiledInfos(compiled);
+            }
         }
-        
+
 
         /// <inheritdoc />
         /// <exception cref="MapperException"></exception>
@@ -166,7 +184,7 @@ namespace AMKsGear.Core.Automation.Mapper
 
             throw new NotImplementedException();
         }
-        
+
 
         /// <inheritdoc />
         public Func<object, object> GetMapFunction(Type destType, Type srcType, object[] options)
@@ -204,14 +222,14 @@ namespace AMKsGear.Core.Automation.Mapper
                 }
                 else
                 {
-                    using (context.CompileLock())
+                    lock (context.CompileLockTarget)
                     {
                         //Double check the compiled context.
                         if (context.TryGetCompiledInfo(destType, srcType, out mapCompiledInfo))
                         {
                             return mapCompiledInfo.MapExpression;
                         }
-                        
+
                         mapCompiledInfo = Compiler.CompileMapping(this, context, mapping);
 
                         context.CacheCompiledInfo(destType, srcType, mapCompiledInfo);
@@ -220,11 +238,18 @@ namespace AMKsGear.Core.Automation.Mapper
                     }
                 }
             }
-            else if(context.AllowOnTheFlyMapping)
+            else if (context.AllowOnTheFlyMapping)
             {
-                mapping = _addDefaultMapping(destType, srcType);
-                
-                
+                lock (context.CompileLockTarget)
+                {
+                    mapping = _addDefaultMapping(destType, srcType);
+
+                    mapCompiledInfo = Compiler.CompileMapping(this, context, mapping);
+
+                    context.CacheCompiledInfo(destType, srcType, mapCompiledInfo);
+
+                    return mapCompiledInfo.MapExpression;
+                }
             }
             else
             {
@@ -235,16 +260,63 @@ namespace AMKsGear.Core.Automation.Mapper
         /// <inheritdoc />
         public Expression<Func<TSource, TDestination>> GetProjectionExpression<TDestination, TSource>(object[] options)
         {
-            throw new NotImplementedException();
+            var context = Context;
+            if (context.TryGetMappingAndCompiledInfo(typeof(TDestination), typeof(TSource), out var mapping, out var mapCompiledInfo))
+            {
+                if (mapCompiledInfo != null)
+                {
+                    return mapCompiledInfo.MapExpression as Expression<Func<TSource, TDestination>>;
+                }
+                else
+                {
+                    lock (context.CompileLockTarget)
+                    {
+                        //Double check the compiled context.
+                        if (context.TryGetCompiledInfo(typeof(TDestination), typeof(TSource), out mapCompiledInfo))
+                        {
+                            return mapCompiledInfo.MapExpression as Expression<Func<TSource, TDestination>>;
+                        }
+
+                        mapCompiledInfo = Compiler.CompileMapping(this, context, mapping);
+
+                        context.CacheCompiledInfo(typeof(TDestination), typeof(TSource), mapCompiledInfo);
+
+                        return mapCompiledInfo.MapExpression as Expression<Func<TSource, TDestination>>;
+                    }
+                }
+            }
+            else if (context.AllowOnTheFlyMapping)
+            {
+                lock (context.CompileLockTarget)
+                {
+                    mapping = _addDefaultMapping(typeof(TDestination), typeof(TSource));
+
+                    mapCompiledInfo = Compiler.CompileMapping(this, context, mapping);
+
+                    context.CacheCompiledInfo(typeof(TDestination), typeof(TSource), mapCompiledInfo);
+
+                    return mapCompiledInfo.MapExpression as Expression<Func<TSource, TDestination>>;
+                }
+            }
+            else
+            {
+                throw new MappingNotFoundException();
+            }
         }
 
 
         private Mapping _addDefaultMapping(Type destinationType, Type sourceType)
         {
+            //TODO: temporary !
 
+            using (var config = Context.Config())
+            {
+                config.CreateMap(destinationType, sourceType);
+            }
+            
             return null;
         }
-            
+
 
         /// <summary>
         /// 

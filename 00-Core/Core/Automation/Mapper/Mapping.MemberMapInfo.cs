@@ -6,8 +6,8 @@ namespace AMKsGear.Core.Automation.Mapper
     {
         public class MemberMapInfo
         {
-            public IModelValueMemberInfo Destination { get; set; }
-            public IModelValueMemberInfo Source { get; set; }
+            public IModelValueMemberInfo DestinationMember { get; set; }
+            public IModelValueMemberInfo SourceMember { get; set; }
             
             
         }

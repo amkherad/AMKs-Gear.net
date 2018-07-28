@@ -24,7 +24,7 @@ namespace AMKsGear.Core.Automation.Mapper
         
         
         protected ReaderWriterLockSlim Lock;
-        private object _compileLock;
+        public object CompileLockTarget { get; }
 
         private bool _isReadOnly = false;
 
@@ -33,14 +33,19 @@ namespace AMKsGear.Core.Automation.Mapper
         /// </summary>
         public bool AllowOnTheFlyMapping { get; internal set; }
         
+        /// <summary>
+        /// Determines if context already configured. (To prevent some single-set properties from being changed)
+        /// </summary>
+        public bool IsConfigured { get; internal set; }
 
+        
         public MapperContext()
         {
             MappingRows = new Dictionary<int, Mapping>();
             CompiledCache = new CacheContext<int, MappingCompiledInfo>();
             
             Lock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
-            _compileLock = new object();
+            CompileLockTarget = new object();
         }
 
         public MapperContext(IEnumerable<Mapping> mappingRows)
@@ -53,7 +58,7 @@ namespace AMKsGear.Core.Automation.Mapper
             CompiledCache = new CacheContext<int, MappingCompiledInfo>();
             
             Lock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
-            _compileLock = new object();
+            CompileLockTarget = new object();
         }
         
         protected MapperContext(IDictionary<int, Mapping> mappingRows)
@@ -62,16 +67,9 @@ namespace AMKsGear.Core.Automation.Mapper
             CompiledCache = new CacheContext<int, MappingCompiledInfo>();
             
             Lock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
-            _compileLock = new object();
+            CompileLockTarget = new object();
         }
-
-
-        /// <summary>
-        /// Provides access to internal compile lock, used by mapper compiler.
-        /// </summary>
-        /// <returns></returns>
-        public ISyncBlock CompileLock() => new MonitorBlock(_compileLock);
-
+        
         
         /// <summary>
         /// A shallow copy of object.
@@ -170,6 +168,47 @@ namespace AMKsGear.Core.Automation.Mapper
             finally
             {
                 Lock.ExitWriteLock();
+            }
+        }
+
+        internal int CacheCompiledInfos(IDictionary<int, MappingCompiledInfo> mappingCompiledInfos)
+        {
+            Lock.EnterWriteLock();
+
+            try
+            {
+                return CompiledCache.CacheAll(mappingCompiledInfos);
+            }
+            finally
+            {
+                Lock.ExitWriteLock();
+            }
+        }
+
+        /// <summary>
+        /// Gets all mappings without equivalent compiled info. (Those which needing compilation).
+        /// </summary>
+        public IDictionary<int, Mapping> GetMappingsWithoutCompiledInfo()
+        {
+            var result = new Dictionary<int, Mapping>();
+            
+            Lock.EnterReadLock();
+
+            try
+            {
+                foreach (var row in MappingRows)
+                {
+                    if (!CompiledCache.Exists(row.Key))
+                    {
+                        result.Add(row.Key, row.Value);
+                    }
+                }
+
+                return result;
+            }
+            finally
+            {
+                Lock.ExitReadLock();
             }
         }
 

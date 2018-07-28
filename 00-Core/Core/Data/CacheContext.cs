@@ -94,6 +94,26 @@ namespace AMKsGear.Core.Data
             return false;
         }
 
+        public int Cache(IDictionary<TContentDescriptor, TContent> entries)
+        {
+            var count = 0;
+            foreach (var entry in entries)
+            {
+                if (_contents.ContainsKey(entry.Key))
+                {
+                    _contents[entry.Key] = entry.Value;
+                }
+                else
+                {
+                    _contents.Add(entry.Key, entry.Value);
+                }
+
+                ++count;
+            }
+
+            return count;
+        }
+
         public bool Miss(TContentDescriptor key)
         {
             if (!_contents.ContainsKey(key))
