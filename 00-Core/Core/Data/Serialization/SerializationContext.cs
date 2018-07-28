@@ -29,7 +29,7 @@ namespace AMKsGear.Core.Data.Serialization
         {
             if (instance == null) throw new ArgumentNullException(nameof(instance));
             _instance = instance;
-            _members = ModelingHelpers.GetValueMembers(instance.GetType(), propertySelector, fieldSelector);
+            _members = ModelingHelpers.GetCompatibleModelValueMembers(instance.GetType(), propertySelector, fieldSelector);
         }
 
         public object Instance => _instance;

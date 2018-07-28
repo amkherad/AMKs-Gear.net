@@ -6,7 +6,7 @@ namespace AMKsGear.Core.Automation.Mapper.Configurator
     {
         public interface IMap
         {
-            IEnumerable<MappingRow> CreateRows();
+            IEnumerable<Mapping> CreateRows();
         }
     }
 }

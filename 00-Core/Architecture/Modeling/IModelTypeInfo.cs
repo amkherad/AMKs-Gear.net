@@ -6,16 +6,15 @@ using AMKsGear.Architecture.Annotations;
 
 namespace AMKsGear.Architecture.Modeling
 {
-    public interface ITypeModel : IAdapter
+    public interface IModelTypeInfo : IAdapter
     {
         Type Type { get; }
         TypeInfo TypeInfo { get; }
 
-        IEnumerable<IMemberInfo> AllMembers { get; }
+        IEnumerable<IModelMemberInfo> AllMembers { get; }
         IEnumerable<PropertyInfo> Properties { get; }
         IEnumerable<FieldInfo> Fields { get; }
         IEnumerable<MethodInfo> Methods { get; } 
-        IEnumerable<EventInfo> Events { get; } 
-        
+        IEnumerable<EventInfo> Events { get; }
     }
 }

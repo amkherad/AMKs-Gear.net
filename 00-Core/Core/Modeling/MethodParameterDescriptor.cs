@@ -27,6 +27,6 @@ namespace AMKsGear.Core.Modeling
         public bool IsOptional => ParameterInfo.IsOptional;
         public bool IsRetVal => ParameterInfo.IsRetval;
         public int Position => ParameterInfo.Position;
-        public IMemberInfo Member => new ClassMemberInfo(ParameterInfo.Member);
+        public ParameterInfo Member => ParameterInfo;
     }
 }

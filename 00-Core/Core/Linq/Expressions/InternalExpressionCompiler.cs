@@ -12,14 +12,20 @@ namespace AMKsGear.Core.Linq.Expressions
         /// <summary>
         /// Single instance to 
         /// </summary>
-        public static InternalExpressionCompiler Instance => LazyInitializer.EnsureInitialized(ref _singleInstance);
+        public static InternalExpressionCompiler Instance
+        {
+            get
+            {
+                if (_singleInstance != null) return _singleInstance;
+                return LazyInitializer.EnsureInitialized(ref _singleInstance);
+            }
+        }
 
-        
-        
+
         protected InternalExpressionCompiler()
         {
         }
-        
+
         /// <inheritdoc />
         public TFunc Compile<TFunc>(Expression<TFunc> source)
         {

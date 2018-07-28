@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using AMKsGear.Architecture.Patterns;
 
 namespace AMKsGear.Architecture.Modeling
@@ -16,6 +17,6 @@ namespace AMKsGear.Architecture.Modeling
         bool IsRetVal { get; }
 
         int Position { get; }
-        IMemberInfo Member { get; }
+        ParameterInfo Member { get; }
     }
 }

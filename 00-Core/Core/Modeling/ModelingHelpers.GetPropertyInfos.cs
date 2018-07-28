@@ -8,7 +8,7 @@ namespace AMKsGear.Core.Modeling
 {
     public static partial class ModelingHelpers
     {
-        public static IEnumerable<PropertyInfo> GetPropertyInfos(Type type, BindingFlags bindingFlags)
+        public static IEnumerable<PropertyInfo> GetCompatiblePropertyInfos(Type type, BindingFlags bindingFlags)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 
@@ -23,7 +23,7 @@ namespace AMKsGear.Core.Modeling
             return props.Where(x => !x.IsDefined(typeof(ModelExcludeAttribute), true));
         }
         
-        public static IEnumerable<PropertyInfo> GetPropertyInfos(Type type, Func<PropertyInfo, bool> selector = null)
+        public static IEnumerable<PropertyInfo> GetCompatiblePropertyInfos(Type type, Func<PropertyInfo, bool> selector = null)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
             
@@ -42,7 +42,7 @@ namespace AMKsGear.Core.Modeling
             return props.Where(x => !x.IsDefined(typeof(ModelExcludeAttribute), true));
         }
         
-        private static IEnumerable<PropertyInfo> GetPropertyInfos(TypeInfo type, Func<PropertyInfo, bool> selector = null)
+        private static IEnumerable<PropertyInfo> GetCompatiblePropertyInfos(TypeInfo type, Func<PropertyInfo, bool> selector = null)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 

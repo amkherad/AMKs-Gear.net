@@ -18,7 +18,7 @@ namespace AMKsGear.Core.Automation.Mapper
         /// </summary>
         public MapperContext Context { get; protected set; }
 
-
+        
         /// <summary>
         /// Creates a new instance of <see cref="MapperScope"/> using an empty context.
         /// </summary>

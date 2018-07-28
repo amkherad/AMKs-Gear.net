@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using AMKsGear.Architecture.Modeling;
 using AMKsGear.Architecture.Modeling.Annotations;
 using AMKsGear.Core.Collections;
 
 namespace AMKsGear.Core.Modeling
 {
+    /// <summary>
+    /// Provides helper methods to provides information about models(types).
+    /// </summary>
     public static partial class ModelingHelpers
     {
-        
-        
         
         public static IEnumerable<T> OrderMemberInfos<T>(IEnumerable<T> collection) where T : IModelMemberInfo
         {

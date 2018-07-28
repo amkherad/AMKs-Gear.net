@@ -17,7 +17,7 @@ namespace AMKsGear.Core.Automation.Mapper
     /// <summary>
     /// A simple object mapper with support of queryable projection.
     /// </summary>
-    public class Mapper
+    public partial class Mapper
         : IMapper, IMapperQueryableSupport,
             IMapperEx, IMapperQueryableSupportEx
     {
@@ -166,7 +166,7 @@ namespace AMKsGear.Core.Automation.Mapper
 
             throw new NotImplementedException();
         }
-
+        
 
         /// <inheritdoc />
         public Func<object, object> GetMapFunction(Type destType, Type srcType, object[] options)
@@ -195,7 +195,41 @@ namespace AMKsGear.Core.Automation.Mapper
         /// <inheritdoc />
         public Expression GetProjectionExpression(Type destType, Type srcType, object[] options)
         {
-            throw new NotImplementedException();
+            var context = Context;
+            if (context.TryGetMappingAndCompiledInfo(destType, srcType, out var mapping, out var mapCompiledInfo))
+            {
+                if (mapCompiledInfo != null)
+                {
+                    return mapCompiledInfo.MapExpression;
+                }
+                else
+                {
+                    using (context.CompileLock())
+                    {
+                        //Double check the compiled context.
+                        if (context.TryGetCompiledInfo(destType, srcType, out mapCompiledInfo))
+                        {
+                            return mapCompiledInfo.MapExpression;
+                        }
+                        
+                        mapCompiledInfo = Compiler.CompileMapping(this, context, mapping);
+
+                        context.CacheCompiledInfo(destType, srcType, mapCompiledInfo);
+
+                        return mapCompiledInfo.MapExpression;
+                    }
+                }
+            }
+            else if(context.AllowOnTheFlyMapping)
+            {
+                mapping = _addDefaultMapping(destType, srcType);
+                
+                
+            }
+            else
+            {
+                throw new MappingNotFoundException();
+            }
         }
 
         /// <inheritdoc />
@@ -204,6 +238,13 @@ namespace AMKsGear.Core.Automation.Mapper
             throw new NotImplementedException();
         }
 
+
+        private Mapping _addDefaultMapping(Type destinationType, Type sourceType)
+        {
+
+            return null;
+        }
+            
 
         /// <summary>
         /// 

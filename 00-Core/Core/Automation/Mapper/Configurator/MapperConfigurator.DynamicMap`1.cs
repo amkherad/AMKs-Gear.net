@@ -11,7 +11,7 @@ namespace AMKsGear.Core.Automation.Mapper.Configurator
             
             
             
-            public IEnumerable<MappingRow> CreateRows()
+            public IEnumerable<Mapping> CreateRows()
             {
                 throw new System.NotImplementedException();
             }

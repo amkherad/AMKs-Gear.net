@@ -8,7 +8,7 @@ namespace AMKsGear.Core.Modeling
 {
     public static partial class ModelingHelpers
     {
-        private static IEnumerable<FieldInfo> GetFieldInfos(Type type, Func<FieldInfo, bool> selector = null)
+        private static IEnumerable<FieldInfo> GetCompatibleFieldInfos(Type type, Func<FieldInfo, bool> selector = null)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
             
@@ -26,7 +26,7 @@ namespace AMKsGear.Core.Modeling
             return fields.Where(x => !x.IsDefined(typeof(ModelExcludeAttribute), true));
         }
         
-        private static IEnumerable<FieldInfo> GetFieldInfos(TypeInfo type, Func<FieldInfo, bool> selector = null)
+        private static IEnumerable<FieldInfo> GetCompatibleFieldInfos(TypeInfo type, Func<FieldInfo, bool> selector = null)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
             

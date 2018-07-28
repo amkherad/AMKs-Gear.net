@@ -105,7 +105,7 @@ namespace AMKsGear.Core.Data
 
         public void Dispose()
         {
-            Clear();
+            //Clear(); //GC is faster than clearing.
         }
     }
 }

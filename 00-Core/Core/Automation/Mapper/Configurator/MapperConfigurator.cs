@@ -6,7 +6,7 @@ namespace AMKsGear.Core.Automation.Mapper.Configurator
 {
     public partial class MapperConfigurator : IDisposable
     {
-        public MapperContext MapperContext { get; }
+        public MapperContext Context { get; }
 
         private ICollection<IMap> _maps;
 
@@ -21,7 +21,7 @@ namespace AMKsGear.Core.Automation.Mapper.Configurator
 
         public MapperConfigurator(MapperContext mapperContext)
         {
-            MapperContext = mapperContext ?? throw new ArgumentNullException(nameof(mapperContext));
+            Context = mapperContext ?? throw new ArgumentNullException(nameof(mapperContext));
             _maps = new List<IMap>();
         }
 
@@ -78,6 +78,36 @@ namespace AMKsGear.Core.Automation.Mapper.Configurator
         }
 
 
+        /// <summary>
+        /// Removes a map from context. (both destination-to-source and source-to-destination)
+        /// </summary>
+        /// <remarks>
+        /// Maps inside current <see cref="MapperConfigurator"/> don't get removed.
+        /// </remarks>
+        /// <typeparam name="TDestination"></typeparam>
+        /// <typeparam name="TSource"></typeparam>
+        public void RemoveMap<TDestination, TSource>() => RemoveMap<TDestination, TSource>(true);
+        
+        /// <summary>
+        /// Removes a map from context.
+        /// </summary>
+        /// <remarks>
+        /// Maps inside current <see cref="MapperConfigurator"/> don't get removed.
+        /// </remarks>
+        /// <param name="twoWay">If true, removes both destination-to-source and source-to-destination maps.</param>
+        /// <typeparam name="TDestination"></typeparam>
+        /// <typeparam name="TSource"></typeparam>
+        public void RemoveMap<TDestination, TSource>(bool twoWay)
+        {
+            Context.Remove(typeof(TDestination), typeof(TSource));
+
+            if (twoWay)
+            {
+                Context.Remove(typeof(TSource), typeof(TDestination));
+            }
+        }
+
+
         public MapperConfigurator AllowCustomMapping(bool state)
         {
             CustomMappingEnabled = state;
@@ -101,14 +131,15 @@ namespace AMKsGear.Core.Automation.Mapper.Configurator
         {
             if (_maps == null) return;
 
-            var rows = new List<MappingRow>();
+            var rows = new List<Mapping>();
 
             foreach (var map in _maps)
             {
                 rows.AddRange(map.CreateRows());
             }
 
-            MapperContext.AddRange(rows);
+            //single call to ensure locking.
+            Context.AddRange(rows);
         }
 
         public void Dispose()
