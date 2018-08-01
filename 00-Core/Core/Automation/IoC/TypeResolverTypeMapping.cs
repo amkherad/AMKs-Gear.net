@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using AMKsGear.Architecture.Patterns;
 using AMKsGear.Core.Automation.IoC.LifetimeManagers;
 using AMKsGear.Core.Automation.Reflection;
+using AMKsGear.Core.Localization;
 
 namespace AMKsGear.Core.Automation.IoC
 {
@@ -292,7 +293,7 @@ namespace AMKsGear.Core.Automation.IoC
             var context = GetContext(type);
             if (context == null)
                 throw new InvalidOperationException(
-                    Localization.Format<ITypeResolverLocalization, DefaultTypeResolverLocalization>(
+                    LocalizationServices.Format<ITypeResolverLocalizationModel, DefaultTypeResolverLocalizationModel>(
                         x => x.TypeDescriptionNotFound, type.Name)
                     );
 

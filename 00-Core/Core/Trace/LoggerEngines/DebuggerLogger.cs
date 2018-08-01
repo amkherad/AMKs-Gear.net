@@ -1,33 +1,24 @@
 ﻿using System;
-using System.Text;
 using AMKsGear.Architecture.Trace;
 
 namespace AMKsGear.Core.Trace.LoggerEngines
 {
-    public class DebuggerLogger : ILoggerEngine
+    public class DebuggerLogger : ILogChannel
     {
-        public void Write(string @string, string styles, ILoggingContext context,
-            string callerMemberName,
-            int callerLineNumber,
-            string callerFilePath)
+        public void LogString(string @string, ILoggingContext context, string callerMemberName = null, int callerLineNumber = 0,
+            string callerFilePath = null)
         {
             System.Diagnostics.Debug.WriteLine(@string);
         }
-        public void Write(Exception exception, string styles, ILoggingContext context,
-            string callerMemberName,
-            int callerLineNumber,
-            string callerFilePath)
+
+        public void LogException(Exception exception, ILoggingContext context, string callerMemberName = null,
+            int callerLineNumber = 0, string callerFilePath = null)
         {
-            System.Diagnostics.Debug.WriteLine(exception.ToString());
-        }
-        public void Feed(int repeat)
-        {
-            System.Diagnostics.Debug.WriteLine(new StringBuilder(repeat).Insert(0, Environment.NewLine, repeat).ToString());
+            System.Diagnostics.Debug.WriteLine(exception);
         }
 
         public void Dispose()
         {
-
         }
     }
 }

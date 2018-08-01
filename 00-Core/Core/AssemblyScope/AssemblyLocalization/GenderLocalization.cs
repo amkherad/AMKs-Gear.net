@@ -1,14 +1,14 @@
-﻿using AMKsGear.Architecture.LocalizationFramework;
+﻿using AMKsGear.Architecture.Localization;
 
 namespace AMKsGear.Core.AssemblyScope.AssemblyLocalization
 {
-    public interface IGenderLocalization : ILocalization
+    public interface IGenderLocalizationModel : ILocalizationModel
     {
         string GenderMale { get; }
         string GenderFemale { get; }
         string GenderUnspecified { get; }
     }
-    public class DefaultGenderLocalization : IGenderLocalization
+    public class DefaultGenderLocalizationModel : DefaultEnglishLocalization, IGenderLocalizationModel
     {
         public const string DefaultGenderMale = "Male";
         public const string DefaultGenderFemale = "Female";

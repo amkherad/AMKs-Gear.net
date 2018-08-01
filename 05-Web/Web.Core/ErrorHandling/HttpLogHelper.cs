@@ -9,25 +9,25 @@ namespace AMKsGear.Web.Core.ErrorHandling
 {
     public static class HttpLogHelper
     {
-        public static void OnActionExecuting(this LocalLogger loggerEngine, string category, LogLevel level, IActionContext actionContext)
+        public static void OnActionExecuting(this ILogChannel loggerEngine, string category, LogLevel level, IActionContext actionContext)
         {
-            loggerEngine.Write(log: GetLogString(
+            loggerEngine.Log(GetLogString(
                 "Executing '{0}' with folowing information:",
                 level,
                 actionContext,
                 actionContext.ActionDescriptor,
                 false
-            ), category: category);
+            ));
         }
-        public static void OnActionExecuted(this LocalLogger loggerEngine, string category, LogLevel level, IActionContext actionContext)
+        public static void OnActionExecuted(this ILogChannel loggerEngine, string category, LogLevel level, IActionContext actionContext)
         {
-            loggerEngine.Write(log: GetLogString(
+            loggerEngine.Log(GetLogString(
                 "Action '{0}' execution has done with folowing information:",
                 level,
                 actionContext,
                 actionContext.ActionDescriptor,
                 true
-            ), category: category);
+            ));
         }
 
         public static string GetLogString(string header, LogLevel level, IActionContext actionContext, IActionDescriptor actionDescriptor, bool logResponse)

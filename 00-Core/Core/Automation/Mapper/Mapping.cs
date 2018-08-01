@@ -25,9 +25,21 @@ namespace AMKsGear.Core.Automation.Mapper
 
         
         /// <summary>
+        /// Mapping strategy.
+        /// </summary>
+        public MappingStrategy MappingStrategy { get; }
+        
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public MappingUsages MappingUsages { get; }
+        
+        
+        /// <summary>
         /// A table of member mappings.
         /// </summary>
-        public IEnumerable<MemberMapInfo> MemberMappings { get; }
+        public IList<MemberMapInfo> MemberMappings { get; }
 
 
         /// <summary>
@@ -36,18 +48,30 @@ namespace AMKsGear.Core.Automation.Mapper
         /// <param name="destinationType">The destination side of the mapping.</param>
         /// <param name="sourceType">The source side of the mapping.</param>
         /// <param name="memberMappings"></param>
+        /// <param name="mappingStrategy"></param>
         public Mapping(
             Type destinationType,
             Type sourceType,
-            IEnumerable<MemberMapInfo> memberMappings
-            )
+            IList<MemberMapInfo> memberMappings,
+            MappingStrategy mappingStrategy)
         {
             if (destinationType == null) throw new ArgumentNullException(nameof(destinationType));
             
             DestinationType = destinationType;
             SourceType = sourceType;
             MemberMappings = memberMappings;
+            MappingStrategy = mappingStrategy;
         }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal bool CanBeUsedInQueryables() =>
+            (MappingUsages & MappingUsages.QueryableProjection) == MappingUsages.QueryableProjection;
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal bool CanBeUsedInObjectMap() =>
+            (MappingUsages & MappingUsages.ObjectMap) == MappingUsages.ObjectMap;
+        
         
         /// <summary>
         /// Checks equality of this instance of <see cref="Mapping"/> to another.
@@ -70,7 +94,7 @@ namespace AMKsGear.Core.Automation.Mapper
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
             return Equals((Mapping) obj);
         }
 

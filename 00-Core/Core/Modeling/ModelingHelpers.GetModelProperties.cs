@@ -36,5 +36,21 @@ namespace AMKsGear.Core.Modeling
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<IModelValueMemberInfo> GetModelProperties(IEnumerable<PropertyInfo> propertyInfos)
             => propertyInfos.Select(fi => new ModelPropertyInfo(fi));
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<IModelValueMemberInfo> GetModelProperties(Type type)
+            => GetModelProperties(type.GetProperties());
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<IModelValueMemberInfo> GetModelProperties(TypeInfo type)
+            => GetModelProperties(type.GetProperties());
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<IModelValueMemberInfo> GetModelProperties(Type type, BindingFlags bindingFlags)
+            => GetModelProperties(type.GetProperties(bindingFlags));
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<IModelValueMemberInfo> GetModelProperties(TypeInfo type, BindingFlags bindingFlags)
+            => GetModelProperties(type.GetProperties(bindingFlags));
     }
 }

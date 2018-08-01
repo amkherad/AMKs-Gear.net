@@ -81,12 +81,13 @@ namespace AMKsGear.Core.Automation.Mapper.Configurator
             {
                 var memberMaps = new List<Mapping.MemberMapInfo>();
 
-                var row = new Mapping(
-                    DestinationType,
-                    SourceType,
-                );
+//                var row = new Mapping(
+//                    DestinationType,
+//                    SourceType,
+//                );
 
-                yield return row;
+                //yield return row;
+                return null;
             }
         }
     }

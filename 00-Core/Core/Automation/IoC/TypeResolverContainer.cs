@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using AMKsGear.Architecture.Automation.IoC;
 using AMKsGear.Architecture.Patterns;
 using AMKsGear.Core.Collections;
+using AMKsGear.Core.Localization;
 
 namespace AMKsGear.Core.Automation.IoC
 {
@@ -116,7 +117,7 @@ namespace AMKsGear.Core.Automation.IoC
             var typeResolverApplier = applier as ITypeResolverApplier;
             if (typeResolverApplier == null)
                 throw new InvalidOperationException(
-                    Localization.Format<ITypeResolverLocalization, DefaultTypeResolverLocalization>(
+                    LocalizationServices.Format<ITypeResolverLocalizationModel, DefaultTypeResolverLocalizationModel>(
                         x => x.UnknownTypeForEngine, type.Name)
                     );
             

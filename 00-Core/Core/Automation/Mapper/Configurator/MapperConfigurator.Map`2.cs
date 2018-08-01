@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -20,14 +21,21 @@ namespace AMKsGear.Core.Automation.Mapper.Configurator
             public MappingType MappingType { get; protected internal set; }
             public bool IsTwoWay { get; protected internal set; }
             
-            public BindingFlags BindingFlags { get; protected internal set; }
+            public BindingFlags DestinationBindingFlags { get; protected internal set; }
+            public BindingFlags SourceBindingFlags { get; protected internal set; }
 
-            public ICollection<IModelValueMemberFilter> Filters { get; protected internal set; }
+            public ICollection<IModelValueMemberFilter> DestinationFilters { get; protected internal set; }
+            public ICollection<IModelValueMemberFilter> SourceFilters { get; protected internal set; }
+            
+            public IMapperMemberMatchingStrategy MemberMatchingStrategy { get; protected internal set; }
             
             
             public Map(MapperConfigurator configurator)
             {
                 Configurator = configurator;
+
+                DestinationBindingFlags = BindingFlags.Public | BindingFlags.Instance;
+                SourceBindingFlags = BindingFlags.Public | BindingFlags.Instance;
             }
 
 
@@ -48,7 +56,6 @@ namespace AMKsGear.Core.Automation.Mapper.Configurator
             
             public Map<TDestination, TSource> TwoWay()
             {
-                FilterMembers(null);
                 IsTwoWay = true;
                 return this;
             }
@@ -59,16 +66,17 @@ namespace AMKsGear.Core.Automation.Mapper.Configurator
 //                return this;
 //            }
 
-            public Map<TDestination, TSource> FilterMembers(IModelValueMemberFilter filter)
-            {
-                if (filter == null) throw new ArgumentNullException(nameof(filter));
-                
-                var filters = Filters ?? (Filters = new List<IModelValueMemberFilter>());
-
-                filters.Add(filter);
-                
-                return this;
-            }
+//            public Map<TDestination, TSource> FilterMembers(IModelValueMemberFilter filter)
+//            {
+//                if (filter == null) throw new ArgumentNullException(nameof(filter));
+//                
+//                var filters = Filters ?? (Filters = new List<IModelValueMemberFilter>());
+//
+//                filters.Add(filter);
+//                
+//                return this;
+//            }
+            
             
             /// <summary>
             /// Creates a list of <see cref="Mapping"/> from current mapping.
@@ -76,15 +84,25 @@ namespace AMKsGear.Core.Automation.Mapper.Configurator
             /// <returns></returns>
             public IEnumerable<Mapping> CreateRows()
             {
-                var memberMaps = new List<Mapping.MemberMapInfo>();
-                
                 var row = new Mapping(
                     typeof(TDestination),
                     typeof(TSource),
-                    
+                    MapHelpers.GetMemberMappings(
+                        this,
+                        typeof(TDestination),
+                        typeof(TSource),
+                        DestinationBindingFlags,
+                        SourceBindingFlags,
+                        MemberMatchingStrategy ?? MapperMemberExactMatchingStrategy.Instance,
+                        DestinationFilters,
+                        SourceFilters,
+                        MappingType,
+                        out var mappingStrategy
+                        ),
+                    mappingStrategy
                     );
 
-                yield return row;
+                return new[] {row};
             }
         }
     }

@@ -1,8 +1,8 @@
-﻿using AMKsGear.Architecture.LocalizationFramework;
+﻿using AMKsGear.Architecture.Localization;
 
 namespace AMKsGear.Core.Data.Validation
 {
-    public interface IValidationLocalization : ILocalization
+    public interface IValidationLocalization : ILocalizationModel
     {
         string InvalidBinaryString { get; }
         string InvalidDateTimeString { get; }
@@ -15,7 +15,7 @@ namespace AMKsGear.Core.Data.Validation
         string NullValueString { get; }
         string ValidValueString { get; }
     }
-    public class DefaultValidationLocalization : IValidationLocalization
+    public class DefaultValidationLocalization : DefaultEnglishLocalization, IValidationLocalization
     {
         public string InvalidBinaryString => "Field '{0}', binary length is {2} expected value '{1}'.";
         public string InvalidDateTimeString => "Field '{0}', datetime '{1}' range is {3} expected value '{2}'.";

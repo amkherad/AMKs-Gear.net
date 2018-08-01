@@ -61,28 +61,28 @@ namespace AMKsGear.Core.Automation.IoC
         }
         #endregion
         #region Resolve<TFrom, TTo>
-        public static TTo Resolve<TFrom, TTo>(this ILazyTypeResolver typeResolver)
+        public static TTo Resolve<TFrom, TTo>(this IDynamicTypeResolver typeResolver)
             where TTo : TFrom
         {
             if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver));
 
             return (TTo)typeResolver.Resolve(typeof(TFrom), typeof(TTo), null, null);
         }
-        public static TTo Resolve<TFrom, TTo>(this ILazyTypeResolver typeResolver, object context)
+        public static TTo Resolve<TFrom, TTo>(this IDynamicTypeResolver typeResolver, object context)
             where TTo : TFrom
         {
             if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver));
 
             return (TTo)typeResolver.Resolve(typeof(TFrom), typeof(TTo), context, null);
         }
-        public static TTo Resolve<TFrom, TTo>(this ILazyTypeResolver typeResolver, params object[] args)
+        public static TTo Resolve<TFrom, TTo>(this IDynamicTypeResolver typeResolver, params object[] args)
             where TTo : TFrom
         {
             if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver));
 
             return (TTo)typeResolver.Resolve(typeof(TFrom), typeof(TTo), null, args);
         }
-        public static TTo Resolve<TFrom, TTo>(this ILazyTypeResolver typeResolver, object context, params object[] args)
+        public static TTo Resolve<TFrom, TTo>(this IDynamicTypeResolver typeResolver, object context, params object[] args)
             where TTo : TFrom
         {
             if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver));

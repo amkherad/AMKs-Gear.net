@@ -19,7 +19,7 @@ namespace AMKsGear.Core.Automation.IoC.TypeBindings
 
             var propertyInfo = type.GetRuntimeProperty(propertyName);
             if (propertyInfo == null) throw new InvalidOperationException(
-                Localization.Format<ITypeResolverLocalization, DefaultTypeResolverLocalization>(
+                Localization.LocalizationServices.Format<ITypeResolverLocalizationModel, DefaultTypeResolverLocalizationModel>(
                     x => x.PropertyNotFound, propertyName
                 ));
 

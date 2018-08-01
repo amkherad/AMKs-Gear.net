@@ -5,7 +5,7 @@ using AMKsGear.Architecture.Automation.IoC;
 
 namespace AMKsGear.Core.Automation.IoC
 {
-    public class LazyTypeResolverContainer : TypeResolverContainer, ILazyTypeResolver
+    public class DynamicTypeResolverContainer : TypeResolverContainer, IDynamicTypeResolver
     {
         public object Resolve(Type fromType, Type toType, object context, IEnumerable<object> args)
         {

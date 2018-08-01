@@ -2,12 +2,32 @@ using System;
 using System.Collections;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using AMKsGear.Core.Automation.Reflection;
 
 namespace AMKsGear.Core.Linq.Convert
 {
     public class ArrayConvertHelper : ITypeConvertHelper
     {
+        private static ArrayConvertHelper _instance;
+
+        /// <summary>
+        /// Default singleton instance.
+        /// </summary>
+        public static ArrayConvertHelper Instance
+        {
+            get
+            {
+                if (_instance != null)
+                {
+                    return _instance;
+                }
+
+                return LazyInitializer.EnsureInitialized(ref _instance);
+            }
+        }
+
+
         public bool CanConvert(Type type)
             => typeof(IEnumerable).IsAssignableFrom(type);
 

@@ -3,30 +3,23 @@ using AMKsGear.Architecture.Trace;
 
 namespace AMKsGear.Core.Trace.LoggerEngines
 {
-    public class NullLogger : ILoggerEngine
+    public class NullLogger : ILogChannel
     {
-        public void Write(string @string, string styles, ILoggingContext context,
-            string callerMemberName,
-            int callerLineNumber,
-            string callerFilePath)
-        {
-
-        }
-        public void Write(Exception exception, string styles, ILoggingContext context,
-            string callerMemberName,
-            int callerLineNumber,
-            string callerFilePath)
-        {
-
-        }
-        public void Feed(int repeat)
-        {
-
-        }
-
         public void Dispose()
         {
 
+        }
+
+        public void LogString(string @string, ILoggingContext context, string callerMemberName = null, int callerLineNumber = 0,
+            string callerFilePath = null)
+        {
+            
+        }
+
+        public void LogException(Exception exception, ILoggingContext context, string callerMemberName = null,
+            int callerLineNumber = 0, string callerFilePath = null)
+        {
+            
         }
     }
 }

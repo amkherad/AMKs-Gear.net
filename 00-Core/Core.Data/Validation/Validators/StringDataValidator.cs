@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using AMKsGear.Core.Localization;
 
 namespace AMKsGear.Core.Data.Validation.Validators
 {
@@ -25,7 +26,7 @@ namespace AMKsGear.Core.Data.Validation.Validators
             }
         }
 
-        public override bool Validate(object value, out ILocalizableResult result)
+        public override bool Validate(object value, out ITranslateResult result)
         {
 //            if (value == null)
 //            {
@@ -75,7 +76,7 @@ namespace AMKsGear.Core.Data.Validation.Validators
 //                }
 //            }
 
-            result = Localization.Format<IValidationLocalization, DefaultValidationLocalization>(x => x.ValidValueString);
+            result = LocalizationServices.FormatLazy<IValidationLocalization, DefaultValidationLocalization>(x => x.ValidValueString);
             return true;
         }
     }

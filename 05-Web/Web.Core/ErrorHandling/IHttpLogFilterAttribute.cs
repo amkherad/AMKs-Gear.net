@@ -5,7 +5,7 @@ namespace AMKsGear.Web.Core.ErrorHandling
 {
     public interface IHttpLogFilterAttribute
     {
-        LocalLogger Logger { get; }
+        ILogChannel Logger { get; }
         string LogCategory { get; }
 
         LogLevel LogLevel { get; }

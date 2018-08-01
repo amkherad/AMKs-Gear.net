@@ -29,7 +29,7 @@ namespace AMKsGear.Architecture.Data
         /// <param name="descriptor">The identifier to the unique content.</param>
         /// <param name="content">The content if existed.</param>
         /// <returns>A boolean determining the existence of the content in the cache list</returns>
-        bool TryGet(TContentDescriptor descriptor, out TContent content);
+        bool TryGetValue(TContentDescriptor descriptor, out TContent content);
         
         /// <summary>
         /// Check whether the content is cached or not.
@@ -59,5 +59,17 @@ namespace AMKsGear.Architecture.Data
         /// <param name="descriptor">The identifier to the unique content.</param>
         /// <returns>A boolean determining if the content already exists or not.</returns>
         bool Miss(TContentDescriptor descriptor);
+
+        /// <summary>
+        /// Miss all cache entries.
+        /// </summary>
+        /// <param name="descriptors">A list of cache descriptors to remove from list.</param>
+        /// <returns>Number of total caches removed from list.</returns>
+        int MissAll(IEnumerable<TContentDescriptor> descriptors);
+        
+        /// <summary>
+        /// Returns the number of cache entries.
+        /// </summary>
+        int Count { get; }
     }
 }

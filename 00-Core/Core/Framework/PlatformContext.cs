@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using AMKsGear.Architecture.Platform;
 
@@ -20,6 +22,7 @@ namespace AMKsGear.Core.Framework
 
         public static IPlatform Current => _platform; // ?? TryFillCurrentPlatform();
 
+        //[MethodImpl(MethodImplOptions.NoInlining)]
         //private static IPlatform TryFillCurrentPlatform()
         //{
         //    if (_platform != null) return _platform;
@@ -36,22 +39,26 @@ namespace AMKsGear.Core.Framework
 
     public static class PlatformExtensions
     {
-        //public static string GetApplicationHost(this IPlatform platform)
-        //{
-        //    return "";
-        //}
-
-        //public static Assembly GetPlatformAssembly(this IPlatform platform)
-        //{
-        //    if (platform == null) throw new ArgumentNullException(nameof(platform));
-        //    var entryType = platform.ApplicationEntryType;
-        //    return entryType?.Assembly;
-        //}
-        //public static string GetPlatformAssemblyTitle(this IPlatform platform)
-        //{
-        //    if (platform == null) throw new ArgumentNullException(nameof(platform));
-        //    var entryType = platform.ApplicationEntryType;
-        //    return entryType?.Assembly.GetAssemblyTitle();
-        //}
+//        [MethodImpl(MethodImplOptions.NoInlining)]
+//        public static string GetApplicationHost(this IPlatform platform)
+//        {
+//            return "";
+//        }
+//
+//        [MethodImpl(MethodImplOptions.NoInlining)]
+//        public static Assembly GetPlatformAssembly(this IPlatform platform)
+//        {
+//            if (platform == null) throw new ArgumentNullException(nameof(platform));
+//            var entryType = platform.ApplicationEntryType;
+//            return entryType?.Assembly;
+//        }
+//        
+//        [MethodImpl(MethodImplOptions.NoInlining)]
+//        public static string GetPlatformAssemblyTitle(this IPlatform platform)
+//        {
+//            if (platform == null) throw new ArgumentNullException(nameof(platform));
+//            var entryType = platform.ApplicationEntryType;
+//            return entryType?.Assembly.GetAssemblyTitle();
+//        }
     }
 }

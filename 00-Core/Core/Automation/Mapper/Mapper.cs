@@ -4,13 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
-using System.Threading;
 using AMKsGear.Architecture.Annotations;
-using AMKsGear.Architecture.Automation;
 using AMKsGear.Architecture.Automation.Mapper;
 using AMKsGear.Architecture.Linq.Expressions;
-using AMKsGear.Core.Automation.Mapper.Annotations;
-using AMKsGear.Core.Data;
 using AMKsGear.Core.Linq.Expressions;
 
 namespace AMKsGear.Core.Automation.Mapper
@@ -23,6 +19,7 @@ namespace AMKsGear.Core.Automation.Mapper
             IMapperEx, IMapperQueryableSupportEx
     {
         public IExpressionCompiler ExpressionCompiler { get; }
+        //public ITypeResolver TypeResolver { get; }
 
         public MapperContext Context { get; }
 
@@ -39,7 +36,10 @@ namespace AMKsGear.Core.Automation.Mapper
 
         /// <inheritdoc />
         public Mapper()
-            : this(InternalExpressionCompiler.Instance, new MapperContext())
+            : this(
+                InternalExpressionCompiler.Instance,
+                new MapperContext()
+            )
         {
         }
 
@@ -89,11 +89,11 @@ namespace AMKsGear.Core.Automation.Mapper
         }
 
 
-        public void Compile()
+        public Mapper Compile()
         {
             var context = Context;
             var entries = context.GetMappingsWithoutCompiledInfo();
-            
+
             var compiled = new Dictionary<int, MappingCompiledInfo>();
 
             lock (context.CompileLockTarget)
@@ -109,6 +109,8 @@ namespace AMKsGear.Core.Automation.Mapper
             {
                 context.CacheCompiledInfos(compiled);
             }
+
+            return this;
         }
 
 
@@ -210,6 +212,52 @@ namespace AMKsGear.Core.Automation.Mapper
             throw new NotImplementedException();
         }
 
+        public Expression GetInstantiationMapExpression(Type destType, Type srcType, object[] options)
+        {
+            var context = Context;
+            if (context.TryGetMappingAndCompiledInfo(destType, srcType, out var mapping, out var mapCompiledInfo))
+            {
+                if (mapCompiledInfo != null)
+                {
+                    return mapCompiledInfo.NewMapExpression;
+                }
+                else
+                {
+                    lock (context.CompileLockTarget)
+                    {
+                        //Double check the compiled context.
+                        if (context.TryGetCompiledInfo(destType,srcType, out mapCompiledInfo))
+                        {
+                            return mapCompiledInfo.NewMapExpression;
+                        }
+
+                        mapCompiledInfo = Compiler.CompileMapping(this, context, mapping);
+
+                        context.CacheCompiledInfo(destType,srcType, mapCompiledInfo);
+
+                        return mapCompiledInfo.NewMapExpression;
+                    }
+                }
+            }
+            else if (context.AllowOnTheFlyMapping)
+            {
+                lock (context.CompileLockTarget)
+                {
+                    mapping = _addDefaultMapping(destType,srcType);
+
+                    mapCompiledInfo = Compiler.CompileMapping(this, context, mapping);
+
+                    context.CacheCompiledInfo(destType, srcType, mapCompiledInfo);
+
+                    return mapCompiledInfo.NewMapExpression;
+                }
+            }
+            else
+            {
+                throw new MappingNotFoundException();
+            }
+        }
+
         /// <inheritdoc />
         public Expression GetProjectionExpression(Type destType, Type srcType, object[] options)
         {
@@ -261,7 +309,8 @@ namespace AMKsGear.Core.Automation.Mapper
         public Expression<Func<TSource, TDestination>> GetProjectionExpression<TDestination, TSource>(object[] options)
         {
             var context = Context;
-            if (context.TryGetMappingAndCompiledInfo(typeof(TDestination), typeof(TSource), out var mapping, out var mapCompiledInfo))
+            if (context.TryGetMappingAndCompiledInfo(typeof(TDestination), typeof(TSource), out var mapping,
+                out var mapCompiledInfo))
             {
                 if (mapCompiledInfo != null)
                 {
@@ -313,7 +362,7 @@ namespace AMKsGear.Core.Automation.Mapper
             {
                 config.CreateMap(destinationType, sourceType);
             }
-            
+
             return null;
         }
 

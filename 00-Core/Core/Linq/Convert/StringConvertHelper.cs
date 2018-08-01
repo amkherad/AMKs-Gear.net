@@ -1,10 +1,30 @@
 using System;
 using System.Linq.Expressions;
+using System.Threading;
 
 namespace AMKsGear.Core.Linq.Convert
 {
     public class StringConvertHelper : ITypeConvertHelper
     {
+        private static StringConvertHelper _instance;
+
+        /// <summary>
+        /// Default singleton instance.
+        /// </summary>
+        public static StringConvertHelper Instance
+        {
+            get
+            {
+                if (_instance != null)
+                {
+                    return _instance;
+                }
+
+                return LazyInitializer.EnsureInitialized(ref _instance);
+            }
+        }
+        
+        
         public bool AllowToString { get; }
 
 
@@ -32,24 +52,28 @@ namespace AMKsGear.Core.Linq.Convert
 
         public Expression CreateInlineConvertExpression(Expression source, Type destinationType)
         {
-            if (source.Type == typeof(string))
+            var sourceType = source.Type;
+            
+            if (sourceType == typeof(string))
             {
                 return source;
             }
             
-            source = Expression.Call(source, source.Type.GetMethod("ToString", Type.EmptyTypes));
+            source = Expression.Call(source, sourceType.GetMethod(nameof(object.ToString), Type.EmptyTypes));
 
             return source;
         }
 
         public Expression CreateInlineConvertExpressionQueryableSafe(Expression source, Type destinationType)
         {
-            if (source.Type == typeof(string))
+            var sourceType = source.Type;
+
+            if (sourceType == typeof(string))
             {
                 return source;
             }
             
-            source = Expression.Call(source, source.Type.GetMethod("ToString", Type.EmptyTypes));
+            source = Expression.Call(source, sourceType.GetMethod(nameof(object.ToString), Type.EmptyTypes));
 
             return source;
         }

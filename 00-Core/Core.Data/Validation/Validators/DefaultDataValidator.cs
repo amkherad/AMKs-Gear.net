@@ -4,16 +4,15 @@ namespace AMKsGear.Core.Data.Validation.Validators
 {
     public class DefaultDataValidator : DataValidator
     {
-        public override bool Validate(object value, out ILocalizableResult result) => Validate(this, value, out result);
+        public override bool Validate(object value, out ITranslateResult result) => Validate(this, value, out result);
         public override bool Validate(object value, out string error)
         {
-            ILocalizableResult errorResult;
-            var result = Validate(this, value, out errorResult);
-            error = errorResult.GetResult();
+            var result = Validate(this, value, out var errorResult);
+            error = errorResult.GetValue();
             return result;
         }
 
-        public static bool Validate(DataValidator validator, object value, out ILocalizableResult error)
+        public static bool Validate(DataValidator validator, object value, out ITranslateResult error)
         {
             error = string.Empty.ToLocalizableResult();
             return false;

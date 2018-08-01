@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using AMKsGear.Architecture.Data;
 using AMKsGear.Architecture.Parallelism;
+using AMKsGear.Core.Collections;
 using AMKsGear.Core.Data;
 using AMKsGear.Core.Parallelism;
 
@@ -21,8 +22,8 @@ namespace AMKsGear.Core.Automation.Mapper
     {
         protected IDictionary<int, Mapping> MappingRows { get; }
         protected ICacheContext<int, MappingCompiledInfo> CompiledCache { get; }
-        
-        
+
+
         protected ReaderWriterLockSlim Lock;
         public object CompileLockTarget { get; }
 
@@ -32,45 +33,41 @@ namespace AMKsGear.Core.Automation.Mapper
         /// Determines the ability to add a mapping using general map options when mapping doesn't found.
         /// </summary>
         public bool AllowOnTheFlyMapping { get; internal set; }
-        
+
         /// <summary>
         /// Determines if context already configured. (To prevent some single-set properties from being changed)
         /// </summary>
         public bool IsConfigured { get; internal set; }
 
-        
+
         public MapperContext()
         {
             MappingRows = new Dictionary<int, Mapping>();
             CompiledCache = new CacheContext<int, MappingCompiledInfo>();
-            
-            Lock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
+
+            Lock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
             CompileLockTarget = new object();
         }
 
         public MapperContext(IEnumerable<Mapping> mappingRows)
         {
-            MappingRows = new Dictionary<int, Mapping>(
-                mappingRows.Select(x =>
-                    new KeyValuePair<int, Mapping>(Mapping.ComputeHash(x), x)
-                )
-            );
+            MappingRows = new Dictionary<int, Mapping>(mappingRows.ToDictionary(Mapping.ComputeHash));
             CompiledCache = new CacheContext<int, MappingCompiledInfo>();
-            
-            Lock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
+
+            Lock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
             CompileLockTarget = new object();
         }
-        
+
         protected MapperContext(IDictionary<int, Mapping> mappingRows)
         {
             MappingRows = new Dictionary<int, Mapping>(mappingRows);
             CompiledCache = new CacheContext<int, MappingCompiledInfo>();
-            
-            Lock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
+
+            Lock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
             CompileLockTarget = new object();
         }
-        
-        
+
+
         /// <summary>
         /// A shallow copy of object.
         /// </summary>
@@ -101,7 +98,7 @@ namespace AMKsGear.Core.Automation.Mapper
         public bool TryGetMapping(Type destinationType, Type sourceType, out Mapping mapping)
         {
             var hash = Mapping.ComputeHash(destinationType, sourceType);
-            
+
             Lock.EnterReadLock();
 
             try
@@ -121,15 +118,16 @@ namespace AMKsGear.Core.Automation.Mapper
         /// <param name="sourceType"></param>
         /// <param name="mappingCompiledInfo"></param>
         /// <returns>A value indicating that value is found or not.</returns>
-        public bool TryGetCompiledInfo(Type destinationType, Type sourceType, out MappingCompiledInfo mappingCompiledInfo)
+        public bool TryGetCompiledInfo(Type destinationType, Type sourceType,
+            out MappingCompiledInfo mappingCompiledInfo)
         {
             var hash = Mapping.ComputeHash(destinationType, sourceType);
-            
+
             Lock.EnterReadLock();
 
             try
             {
-                return CompiledCache.TryGet(hash, out mappingCompiledInfo);
+                return CompiledCache.TryGetValue(hash, out mappingCompiledInfo);
             }
             finally
             {
@@ -137,16 +135,17 @@ namespace AMKsGear.Core.Automation.Mapper
             }
         }
 
-        public bool TryGetMappingAndCompiledInfo(Type destinationType, Type sourceType, out Mapping mapping, out MappingCompiledInfo mappingCompiledInfo)
+        public bool TryGetMappingAndCompiledInfo(Type destinationType, Type sourceType, out Mapping mapping,
+            out MappingCompiledInfo mappingCompiledInfo)
         {
             var hash = Mapping.ComputeHash(destinationType, sourceType);
-            
+
             Lock.EnterReadLock();
 
             try
             {
                 var result = MappingRows.TryGetValue(hash, out mapping);
-                CompiledCache.TryGet(hash, out mappingCompiledInfo);
+                CompiledCache.TryGetValue(hash, out mappingCompiledInfo);
                 return result;
             }
             finally
@@ -158,7 +157,7 @@ namespace AMKsGear.Core.Automation.Mapper
         public bool CacheCompiledInfo(Type destinationType, Type sourceType, MappingCompiledInfo mappingCompiledInfo)
         {
             var hash = Mapping.ComputeHash(destinationType, sourceType);
-            
+
             Lock.EnterWriteLock();
 
             try
@@ -171,7 +170,7 @@ namespace AMKsGear.Core.Automation.Mapper
             }
         }
 
-        internal int CacheCompiledInfos(IDictionary<int, MappingCompiledInfo> mappingCompiledInfos)
+        protected internal int CacheCompiledInfos(IDictionary<int, MappingCompiledInfo> mappingCompiledInfos)
         {
             Lock.EnterWriteLock();
 
@@ -188,10 +187,10 @@ namespace AMKsGear.Core.Automation.Mapper
         /// <summary>
         /// Gets all mappings without equivalent compiled info. (Those which needing compilation).
         /// </summary>
-        public IDictionary<int, Mapping> GetMappingsWithoutCompiledInfo()
+        protected internal IDictionary<int, Mapping> GetMappingsWithoutCompiledInfo()
         {
             var result = new Dictionary<int, Mapping>();
-            
+
             Lock.EnterReadLock();
 
             try
@@ -319,12 +318,13 @@ namespace AMKsGear.Core.Automation.Mapper
         public void Add(Mapping item)
         {
             var hash = Mapping.ComputeHash(item);
-            
+
             Lock.EnterWriteLock();
 
             try
             {
                 MappingRows.Add(hash, item);
+                CompiledCache.Miss(hash);
             }
             finally
             {
@@ -338,12 +338,20 @@ namespace AMKsGear.Core.Automation.Mapper
         /// <param name="items"></param>
         public void AddRange(IEnumerable<Mapping> items)
         {
+            var hashes = new List<int>();
+
             Lock.EnterWriteLock();
 
             try
             {
                 foreach (var item in items)
-                    MappingRows.Add(Mapping.ComputeHash(item), item);
+                {
+                    var hash = Mapping.ComputeHash(item);
+                    MappingRows.Add(hash, item);
+                    hashes.Add(hash);
+                }
+
+                CompiledCache.MissAll(hashes);
             }
             finally
             {
@@ -378,7 +386,7 @@ namespace AMKsGear.Core.Automation.Mapper
         public bool Contains(Type destinationType, Type sourceType)
         {
             var hash = Mapping.ComputeHash(destinationType, sourceType);
-            
+
             Lock.EnterReadLock();
 
             try
@@ -399,7 +407,7 @@ namespace AMKsGear.Core.Automation.Mapper
         public bool Contains(Mapping item)
         {
             var hash = Mapping.ComputeHash(item);
-            
+
             Lock.EnterReadLock();
 
             try
@@ -439,7 +447,7 @@ namespace AMKsGear.Core.Automation.Mapper
         public bool Remove(Mapping item)
         {
             var hash = Mapping.ComputeHash(item);
-            
+
             Lock.EnterWriteLock();
 
             try
@@ -463,7 +471,7 @@ namespace AMKsGear.Core.Automation.Mapper
         public bool Remove(Type destinationType, Type sourceType)
         {
             var hash = Mapping.ComputeHash(destinationType, sourceType);
-            
+
             Lock.EnterWriteLock();
 
             try

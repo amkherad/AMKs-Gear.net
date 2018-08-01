@@ -2,8 +2,8 @@ namespace AMKsGear.Architecture.Patterns
 {
     /// <inheritdoc cref="ILazyValue"/>
     /// <typeparam name="T">Target value type.</typeparam>
-    public interface ILazyValue<T>
+    public interface ILazyValue<T> : ILazyValue
     {
-        T GetValue();
+        new T GetValue();
     }
 }

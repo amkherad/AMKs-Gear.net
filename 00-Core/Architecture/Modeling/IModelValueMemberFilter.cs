@@ -11,13 +11,13 @@ namespace AMKsGear.Architecture.Modeling
         /// <summary>
         /// A fixed filter predicate.
         /// </summary>
-        Func<IModelValueMemberInfo, bool> FilterPredicate { get; }
+        Func<string, IModelValueMemberInfo, bool> FilterPredicate { get; }
 
         /// <summary>
         /// Applies a filter on an enumerable of <see cref="IModelValueMemberInfo"/>.
         /// </summary>
         /// <param name="memberInfos"></param>
         /// <returns></returns>
-        IEnumerable<IModelValueMemberInfo> Filter(IEnumerable<IModelValueMemberInfo> memberInfos);
+        IDictionary<string, IModelValueMemberInfo> Filter(IDictionary<string, IModelValueMemberInfo> memberInfos);
     }
 }

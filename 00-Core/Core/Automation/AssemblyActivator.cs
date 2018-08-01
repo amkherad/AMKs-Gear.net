@@ -14,7 +14,7 @@
 //{
 //    public static class AssemblyActivator
 //    {
-//        public static int ExecuteAll(ITypeResolver typeResolver, IEnumerable<Assembly> assemblies, ICrossCuttingContext context)
+//        public static int ExecuteAll(ITypeResolver typeResolver, IEnumerable<Assembly> assemblies, IAppContext context)
 //        {
 //            if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
 //            var allActivatorAttributess = new List<AssemblyActivatorAttribute>();

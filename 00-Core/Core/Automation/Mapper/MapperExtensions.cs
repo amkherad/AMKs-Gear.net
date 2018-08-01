@@ -2,13 +2,27 @@ using System;
 using System.Linq;
 using AMKsGear.Architecture.Automation.Mapper;
 using AMKsGear.Core.Automation.Mapper.Configurator;
+using AMKsGear.Core.Patterns.AppModel;
 
 namespace AMKsGear.Core.Automation.Mapper
 {
     public static class MapperExtensions
     {
-        public static TDestination MapTo<TDestination>(this object @object, params object[] options)
+        public static TDestination MapTo<TDestination>(this IMapper mapper, object source, params object[] options)
         {
+            if (mapper == null) throw new ArgumentNullException(nameof(mapper));
+            if (source == null) throw new ArgumentNullException(nameof(source));
+
+            var typeResolver = AppModelContext.Instance.GetTypeResolver();
+
+            //mapper.SourceToDestination(
+            //    typeof(TDestination),
+            //    typeResolver.Resolve<TDestination>(options),
+            //    source.GetType(),
+            //    source,
+            //    options
+            //);
+            
             return default(TDestination);
         }
 

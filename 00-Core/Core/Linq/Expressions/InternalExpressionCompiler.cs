@@ -17,7 +17,7 @@ namespace AMKsGear.Core.Linq.Expressions
             get
             {
                 if (_singleInstance != null) return _singleInstance;
-                return LazyInitializer.EnsureInitialized(ref _singleInstance);
+                return LazyInitializer.EnsureInitialized(ref _singleInstance, () => new InternalExpressionCompiler());
             }
         }
 

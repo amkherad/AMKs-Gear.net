@@ -2,7 +2,7 @@
 
 namespace AMKsGear.Web.Core.MvcPatternAbstractApi
 {
-    public interface IActionContext : IWrapper
+    public interface IActionContext : IAdapter
     {
         IActionDescriptor ActionDescriptor { get; }
         IHttpRequest Request { get; }

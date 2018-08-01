@@ -5,7 +5,7 @@ using AMKsGear.Core.Collections;
 
 namespace AMKsGear.Web.Core.MvcPatternAbstractApi
 {
-    public interface IHttpRequest : IWrapper
+    public interface IHttpRequest : IAdapter
     {
         string GetRawBody();
         Task<string> GetRawBodyAsync();

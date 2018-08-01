@@ -35,5 +35,21 @@ namespace AMKsGear.Core.Modeling
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<IModelValueMemberInfo> GetModelFields(IEnumerable<FieldInfo> fieldInfos)
             => fieldInfos.Select(fi => new ModelFieldInfo(fi));
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<IModelValueMemberInfo> GetModelFields(Type type)
+            => GetModelFields(type.GetFields());
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<IModelValueMemberInfo> GetModelFields(TypeInfo type)
+            => GetModelFields(type.GetFields());
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<IModelValueMemberInfo> GetModelFields(Type type, BindingFlags bindingFlags)
+            => GetModelFields(type.GetFields(bindingFlags));
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<IModelValueMemberInfo> GetModelFields(TypeInfo type, BindingFlags bindingFlags)
+            => GetModelFields(type.GetFields(bindingFlags));
     }
 }

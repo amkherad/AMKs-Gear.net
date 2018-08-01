@@ -33,37 +33,37 @@ namespace AMKsGear.Core.Modeling
 
         public virtual IEnumerable<IModelValueMemberInfo> GetValueMembers(Type type,
             Func<PropertyInfo, bool> propertySelector = null, Func<FieldInfo, bool> fieldSelector = null)
-            => TryGet(type, out var infos)
+            => TryGetValue(type, out var infos)
                 ? infos.OfType<IModelValueMemberInfo>()
                 : ModelingHelpers.GetCompatibleModelValueMembers(type, propertySelector, fieldSelector);
 
         public virtual IEnumerable<IModelValueMemberInfo> GetValueMembers(TypeInfo type,
             Func<PropertyInfo, bool> propertySelector = null, Func<FieldInfo, bool> fieldSelector = null)
-            => TryGet(type.AsType(), out var infos)
+            => TryGetValue(type.AsType(), out var infos)
                 ? infos.OfType<IModelValueMemberInfo>()
                 : ModelingHelpers.GetCompatibleModelValueMembers(type, propertySelector, fieldSelector);
 
         public virtual IEnumerable<IModelMemberInfo> GetProperties(Type type,
             Func<PropertyInfo, bool> propertySelector = null)
-            => TryGet(type, out var infos)
+            => TryGetValue(type, out var infos)
                 ? infos
                 : ModelingHelpers.GetCompatibleModelProperties(type, propertySelector);
 
         public virtual IEnumerable<IModelMemberInfo> GetProperties(TypeInfo type,
             Func<PropertyInfo, bool> propertySelector = null)
-            => TryGet(type.AsType(), out var infos)
+            => TryGetValue(type.AsType(), out var infos)
                 ? infos
                 : ModelingHelpers.GetCompatibleModelProperties(type, propertySelector);
 
         public virtual IEnumerable<IModelMemberInfo> GetFields(Type type,
             Func<FieldInfo, bool> fieldSelector = null)
-            => TryGet(type, out var infos)
+            => TryGetValue(type, out var infos)
                 ? infos
                 : ModelingHelpers.GetCompatibleModelFields(type, fieldSelector);
 
         public virtual IEnumerable<IModelMemberInfo> GetFields(TypeInfo type,
             Func<FieldInfo, bool> fieldSelector = null)
-            => TryGet(type.AsType(), out var infos)
+            => TryGetValue(type.AsType(), out var infos)
                 ? infos
                 : ModelingHelpers.GetCompatibleModelFields(type, fieldSelector);
     }

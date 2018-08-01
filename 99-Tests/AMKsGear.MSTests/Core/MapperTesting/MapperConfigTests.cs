@@ -31,15 +31,27 @@ namespace AMKsGear.MSTests.Core.MapperTesting
 
             using (var config = mapper.Config())
             {
-                config.CreateMap<Order, OrderDto>()
+                config.AllowOnTheFlyMapping();
+                
+                config.CreateMap<OrderDto, OrderDto>()
                     //.FilterMembers()
-                    .TwoWay()
-                    .UseFlattering()
                     //OR: .AddBindingPath(x => x.Customer.Name, x => x.CustomerName)
                     ;
             }
             
-            mapper.Compile();
+            //mapper.Compile();
+
+            var source = new OrderDto
+            {
+                CustomerName = "Ali",
+                Title = "Jack"
+            };
+            var destination = new OrderDto();
+
+            var expression = mapper.GetInstantiationMapExpression(destination.GetType(), source.GetType(), null);
+
+            //Assert.AreSame(destination.CustomerName, "Ali");
+            Assert.IsNotNull(expression);
         }
     }
 }

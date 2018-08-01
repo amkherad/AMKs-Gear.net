@@ -1,32 +1,55 @@
 ﻿using System;
+using System.Threading;
 using AMKsGear.Architecture.Trace;
 
 namespace AMKsGear.Core.Trace.LoggerEngines
 {
-    public class MethodLogger : ILoggerEngine
+    public class MethodLogger : ILogChannel
     {
         public Action<string> Writer { get; }
-        public Action<int> Feeder { get; }
 
-        public MethodLogger(Action<string> writer, Action<int> feeder)
+        private SpinLock _lock;
+
+        public MethodLogger(Action<string> writer)
         {
             Writer = writer;
-            Feeder = feeder;
+            
+            _lock = new SpinLock();
         }
-
-        public void Write(string @string, string styles, ILoggingContext context,
-            string callerMemberName,
-            int callerLineNumber,
-            string callerFilePath) => Writer?.Invoke(@string);
-        public void Write(Exception exception, string styles, ILoggingContext context,
-            string callerMemberName,
-            int callerLineNumber,
-            string callerFilePath) => Writer?.Invoke(exception.Message);
-        public void Feed(int repeat) => Feeder?.Invoke(repeat);
         
         public void Dispose()
         {
+            
+        }
 
+        public void LogString(string @string, ILoggingContext context, string callerMemberName = null, int callerLineNumber = 0,
+            string callerFilePath = null)
+        {
+            var lockTaken = false;
+            try
+            {
+                _lock.Enter(ref lockTaken);
+                Writer(@string);
+            }
+            finally
+            {
+                if (lockTaken) _lock.Exit();
+            }
+        }
+
+        public void LogException(Exception exception, ILoggingContext context, string callerMemberName = null,
+            int callerLineNumber = 0, string callerFilePath = null)
+        {
+            var lockTaken = false;
+            try
+            {
+                _lock.Enter(ref lockTaken);
+                Writer(exception.ToString());
+            }
+            finally
+            {
+                if (lockTaken) _lock.Exit();
+            }
         }
     }
 }

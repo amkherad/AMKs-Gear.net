@@ -2,7 +2,7 @@
 
 namespace AMKsGear.Web.Core.MvcPatternAbstractApi
 {
-    public interface IControllerContext : IWrapper
+    public interface IControllerContext : IAdapter
     {
 
     }

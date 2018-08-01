@@ -103,6 +103,42 @@ namespace AMKsGear.Core.Automation.Reflection
             return true;
         }
 
+        
+        /// <summary>
+        /// Checks whether type is inherited from <see cref="IConvertible"/>.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsConvertible(this Type type) => typeof(IConvertible).IsAssignableFrom(type);
+
+        /// <summary>
+        /// Checks whether type is inherited from <see cref="IConvertible"/>.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsConvertible(this TypeInfo type) => typeof(IConvertible).IsAssignableFrom(type);
+
+
+        /// <summary>
+        /// Checks whether type is primitive or decimal.
+        /// </summary>
+        /// <param name="type">The input type.</param>
+        /// <returns>A boolean determining the type is primitive or decimal.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsPrimitiveOrDecimal(this Type type)
+            => type.IsPrimitive || type == typeof(decimal);
+
+        /// <summary>
+        /// Checks whether type is primitive or decimal.
+        /// </summary>
+        /// <param name="type">The input type.</param>
+        /// <returns>A boolean determining the type is primitive or decimal.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsPrimitiveOrDecimal(this TypeInfo type)
+            => type.IsPrimitive || type == typeof(decimal);
+        
 
         /// <summary>
         /// 
@@ -129,7 +165,7 @@ namespace AMKsGear.Core.Automation.Reflection
                 return typeof(object);
             }
 
-#warning Localization Required.
+#warning LocalizationServices Required.
             //@LocalizationRequired
             throw new Exception();
         }

@@ -31,4 +31,7 @@
       <Link>AssemblyScope/SharedAssemblyInfo.cs</Link>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ErrorHandling" />
+  </ItemGroup>
 </Project>

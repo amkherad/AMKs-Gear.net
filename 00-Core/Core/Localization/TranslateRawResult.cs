@@ -8,6 +8,7 @@
         {
             Result = result;
         }
+        
         public override string GetResult() => Result;
     }
 }

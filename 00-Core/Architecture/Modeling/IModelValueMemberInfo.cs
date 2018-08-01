@@ -23,7 +23,7 @@ namespace AMKsGear.Architecture.Modeling
         object GetValue(object instance, object defaultValue);
         
         /// <summary>
-        /// 
+        /// Sets a member's value.
         /// </summary>
         /// <param name="instance"></param>
         /// <param name="value"></param>

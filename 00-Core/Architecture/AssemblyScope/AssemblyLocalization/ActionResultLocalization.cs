@@ -1,8 +1,8 @@
-﻿using AMKsGear.Architecture.LocalizationFramework;
+﻿using AMKsGear.Architecture.Localization;
 
 namespace AMKsGear.Architecture.AssemblyScope.AssemblyLocalization
 {
-    public interface IActionResultLocalization : ILocalization
+    public interface IActionResultLocalizationModel : ILocalizationModel
     {
         string Success { get; }
         string Succeeded { get; }
@@ -11,7 +11,7 @@ namespace AMKsGear.Architecture.AssemblyScope.AssemblyLocalization
         string Fail { get; }
         string Failed { get; }
     }
-    public class DefaultActionResultLocalization : IActionResultLocalization
+    public class DefaultActionResultLocalizationModel : DefaultEnglishLocalization, IActionResultLocalizationModel
     {
         public string Success => "Success";
         public string Succeeded => "Succeeded";

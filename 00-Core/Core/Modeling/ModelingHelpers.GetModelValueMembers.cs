@@ -32,5 +32,17 @@ namespace AMKsGear.Core.Modeling
 
             return result;
         }
+
+        public static IEnumerable<IModelValueMemberInfo> GetModelValueMembers(Type type)
+            => GetModelFields(type).Union(GetModelProperties(type));
+
+        public static IEnumerable<IModelValueMemberInfo> GetModelValueMembers(Type type, BindingFlags bindingFlags)
+            => GetModelFields(type, bindingFlags).Union(GetModelProperties(type, bindingFlags));
+        
+        public static IEnumerable<IModelValueMemberInfo> GetModelValueMembers(TypeInfo type)
+            => GetModelFields(type).Union(GetModelProperties(type));
+        
+        public static IEnumerable<IModelValueMemberInfo> GetModelValueMembers(TypeInfo type, BindingFlags bindingFlags)
+            => GetModelFields(type, bindingFlags).Union(GetModelProperties(type, bindingFlags));
     }
 }

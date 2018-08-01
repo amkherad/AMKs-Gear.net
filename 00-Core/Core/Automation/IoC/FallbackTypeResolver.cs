@@ -12,17 +12,9 @@ namespace AMKsGear.Core.Automation.IoC
         private readonly IList<ITypeResolver> _resolvers;
 
         public FallbackTypeResolver() { _resolvers = new List<ITypeResolver>(); }
-        public FallbackTypeResolver(bool isCritical)
+        public FallbackTypeResolver(IEnumerable<ITypeResolver> typeResolvers)
         {
-            _resolvers = isCritical
-                ? new ConcurrentList<ITypeResolver>()
-                : new List<ITypeResolver>();
-        }
-        public FallbackTypeResolver(IEnumerable<ITypeResolver> typeResolvers, bool isCritical = false)
-        {
-            _resolvers = isCritical
-                ? new ConcurrentList<ITypeResolver>()
-                : new List<ITypeResolver>();
+            _resolvers = new List<ITypeResolver>();
             foreach (var tr in typeResolvers)
                 _resolvers.Add(tr);
         }

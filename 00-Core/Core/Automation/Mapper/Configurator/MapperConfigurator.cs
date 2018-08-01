@@ -25,6 +25,13 @@ namespace AMKsGear.Core.Automation.Mapper.Configurator
         }
 
 
+        public MapperConfigurator LoadAllAnnotationMappings()
+        {
+
+            return this;
+        }
+        
+
         public Map<TDestination> CreateMap<TDestination>()
         {
             ThrowIfDisposed();

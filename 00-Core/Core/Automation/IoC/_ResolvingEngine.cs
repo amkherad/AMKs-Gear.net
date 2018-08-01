@@ -28,6 +28,7 @@ namespace AMKsGear.Core.Automation.IoC
 
         DefaultConstructor,
     }
+
     internal static class _ResolvingEngine
     {
         public static object CreateInstance(this TypeResolverTypeMapping mapping,
@@ -40,8 +41,10 @@ namespace AMKsGear.Core.Automation.IoC
                 opts.AddRange(args.OfType<ConstantTypedValue>());
                 opts.AddRange(args.OfType<ValueProvider>());
             }
+
             return _createInstance(mapping, resolver, target, opts);
         }
+
         private static object _createInstance(this TypeResolverTypeMapping mapping,
             ITypeResolver resolver, Type target, List<TypeResolverOption> options)
         {
@@ -84,76 +87,77 @@ namespace AMKsGear.Core.Automation.IoC
             switch (context.MappingType)
             {
                 case MappingType.Singleton:
+                {
+                    lock (context)
                     {
-                        lock (context)
+                        var lazyInstance = context.LazyInstance;
+                        if (lazyInstance != null)
                         {
-                            var lazyInstance = context.LazyInstance;
-                            if (lazyInstance != null)
-                            {
-                                result = lazyInstance.GetValue();
-                                context.Instance = result;
-                            }
-                            else
-                                result = cacheInstance;
+                            result = lazyInstance.GetValue();
+                            context.Instance = result;
                         }
-                        break;
+                        else
+                            result = cacheInstance;
                     }
+
+                    break;
+                }
                 case MappingType.Factory:
+                {
+                    var cacheFactory = context.FactoryCache;
+                    try
                     {
-                        var cacheFactory = context.FactoryCache;
-                        try
+                        if (cacheFactory)
                         {
-                            if (cacheFactory)
-                            {
-                                Monitor.Enter(context);
-                            }
-                            
-                            var f1 = context.Factory1;
-                            var instance = f1 != null
-                                ? f1()
-                                : context.Factory2(target);
-                            if (cacheFactory)
-                                context.Instance = instance;
-
-                            result = instance;
-                        }
-                        finally
-                        {
-                            if (cacheFactory)
-                            {
-                                Monitor.Exit(context);
-                            }
+                            Monitor.Enter(context);
                         }
 
-                        break;
+                        var f1 = context.Factory1;
+                        var instance = f1 != null
+                            ? f1()
+                            : context.Factory2(target);
+                        if (cacheFactory)
+                            context.Instance = instance;
+
+                        result = instance;
                     }
+                    finally
+                    {
+                        if (cacheFactory)
+                        {
+                            Monitor.Exit(context);
+                        }
+                    }
+
+                    break;
+                }
                 case MappingType.Resolve:
-                    {
-                        var opts = context.Options.OfType<TypeResolverOption>().ToList();
+                {
+                    var opts = context.Options.OfType<TypeResolverOption>().ToList();
 
-                        opts.AddRange(options);
+                    opts.AddRange(options);
 
-                        var helperContext = new ResolvingContextExpandingHelper(opts);
+                    var helperContext = new ResolvingContextExpandingHelper(opts);
 
-                        result = _recursiveResolve(
-                            helperContext: helperContext,
-                            mapping: mapping,
-                            resolver: resolver,
-                            context: context,
-                            target: target,
-                            @override: null,
-                            options: opts);
+                    result = _recursiveResolve(
+                        helperContext: helperContext,
+                        mapping: mapping,
+                        resolver: resolver,
+                        context: context,
+                        target: target,
+                        @override: null,
+                        options: opts);
 
-                        //#### _resolveProperties moved inside _recursiveResolve. #######################
-                        //_resolveProperties(result,
-                        //    helperContext,
-                        //    mapping,
-                        //    context,
-                        //    target,
-                        //    opts);
+                    //#### _resolveProperties moved inside _recursiveResolve. #######################
+                    //_resolveProperties(result,
+                    //    helperContext,
+                    //    mapping,
+                    //    context,
+                    //    target,
+                    //    opts);
 
-                        break;
-                    }
+                    break;
+                }
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -169,7 +173,7 @@ namespace AMKsGear.Core.Automation.IoC
                         mapping,
                         context,
                         options
-                        );
+                    );
                 }
             }
 
@@ -182,7 +186,9 @@ namespace AMKsGear.Core.Automation.IoC
 
             return result;
         }
-        public static bool CanResolve(this TypeResolverTypeMapping mapping, ITypeResolver resolver, Type target, object[] args)
+
+        public static bool CanResolve(this TypeResolverTypeMapping mapping, ITypeResolver resolver, Type target,
+            object[] args)
         {
             var context = mapping.GetContext(target);
             if (context == null) return false;
@@ -221,12 +227,14 @@ namespace AMKsGear.Core.Automation.IoC
                 Name = pInfo.GetCustomAttribute<NameAttribute>(true)?.Name ?? pInfo.Name;
             }
         }
+
         private class ConstructorSelectorContext
         {
             public ConstructorInfo ConstructorInfo;
             public List<ConstructorSelectorParameterContext> Parameters;
             public IEnumerable<TypeResolverAttribute> Attributes;
         }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static ConstructorSelectorContext _getConstructor(
             TypeResolverTypeMapping mapping,
@@ -234,22 +242,24 @@ namespace AMKsGear.Core.Automation.IoC
             Type requestedType, TypeInfo requestedTypeInfo)
         {
             var constructors =
-             requestedTypeInfo.DeclaredConstructors
-                 .Select(x =>
-                     new ConstructorSelectorContext
-                     {
-                         ConstructorInfo = x,
-                         Parameters = x.GetParameters().Select(pInfo => new ConstructorSelectorParameterContext(pInfo)).ToList(),
-                         Attributes = x.GetCustomAttributes<TypeResolverAttribute>(true)
-                     })
-                 .Where(x => !x.Attributes.Any(a => a is ResolveSkipAttribute))
-                 .OrderByDescending(
-                     x => x.Attributes.OfType<ResolveOrderAttribute>().FirstOrDefault()?.ResolveOrder ?? 0);
+                requestedTypeInfo.DeclaredConstructors
+                    .Select(x =>
+                        new ConstructorSelectorContext
+                        {
+                            ConstructorInfo = x,
+                            Parameters = x.GetParameters()
+                                .Select(pInfo => new ConstructorSelectorParameterContext(pInfo)).ToList(),
+                            Attributes = x.GetCustomAttributes<TypeResolverAttribute>(true)
+                        })
+                    .Where(x => !x.Attributes.Any(a => a is ResolveSkipAttribute))
+                    .OrderByDescending(
+                        x => x.Attributes.OfType<ResolveOrderAttribute>().FirstOrDefault()?.ResolveOrder ?? 0);
 
             return constructors
-                    .FirstOrDefault(c =>
-                        c.Parameters.All(x => _canResolveParameter(mapping, context, x)));
+                .FirstOrDefault(c =>
+                    c.Parameters.All(x => _canResolveParameter(mapping, context, x)));
         }
+
         private static bool _canResolveParameter(
             TypeResolverTypeMapping mapping,
             ResolvingContextExpandingHelper context,
@@ -274,11 +284,13 @@ namespace AMKsGear.Core.Automation.IoC
                 parameterInfo.ResolvingHint = ValueResolvingSourceHint.ValueProvider;
                 return true;
             }
+
             if (context.NamedValues.Any(x => x.ParameterName == parameterInfo.Name))
             {
                 parameterInfo.ResolvingHint = ValueResolvingSourceHint.NamedConstants;
                 return true;
             }
+
             if (context.TypedValues.Any(x => x.ParameterType == pInfo.ParameterType))
             {
                 parameterInfo.ResolvingHint = ValueResolvingSourceHint.TypedConstants;
@@ -326,6 +338,7 @@ namespace AMKsGear.Core.Automation.IoC
                         parameterInfo.ResolvingHint = ValueResolvingSourceHint.DefaultConstructor;
                         parameterInfo.IsDefaultConstructorHint = false;
                     }
+
                     return result;
                 }
             }
@@ -340,7 +353,6 @@ namespace AMKsGear.Core.Automation.IoC
             TypeResolverTypeMappingContext context,
             Type target, List<TypeResolverOption> options)
         {
-
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -352,16 +364,15 @@ namespace AMKsGear.Core.Automation.IoC
             var requestedTypeInfo = requestedType.GetTypeInfo();
             if (requestedTypeInfo.IsInterface)
             {
-                Logger.Write(
-                    $"Unable to create an interface, target:{target.FullName}, resolvingType:{requestedType.FullName}",
-                    category: IoCNamespaceOptions.LoggerCategory);
+                Logger.Default.Log(
+                    $"Unable to create an interface, target:{target.FullName}, resolvingType:{requestedType.FullName}");
                 return null;
             }
+
             if (requestedTypeInfo.IsAbstract)
             {
-                Logger.Write(
-                    $"Unable to create an abstract class, target:{target.FullName}, resolvingType:{requestedType.FullName}",
-                    category: IoCNamespaceOptions.LoggerCategory);
+                Logger.Default.Log(
+                    $"Unable to create an abstract class, target:{target.FullName}, resolvingType:{requestedType.FullName}");
                 return null;
             }
 
@@ -372,9 +383,8 @@ namespace AMKsGear.Core.Automation.IoC
                 requestedTypeInfo: requestedTypeInfo);
             if (constructor == null)
             {
-                Logger.Write(
-                    $"No suitable constructor found, target:{target.FullName}, resolvingType:{requestedType.FullName}",
-                    category: IoCNamespaceOptions.LoggerCategory);
+                Logger.Default.Log(
+                    $"No suitable constructor found, target:{target.FullName}, resolvingType:{requestedType.FullName}");
                 return null;
             }
 
@@ -386,44 +396,44 @@ namespace AMKsGear.Core.Automation.IoC
                     var pType = pInfo.ParameterType;
                     if (pType == target)
                     {
-                        Logger.Write(
-                            $"Circular dependency detected, parameter:{pInfo.Name}({p.Name}) from target:{target.FullName}, resolvingType:{requestedType.FullName}",
-                            category: IoCNamespaceOptions.LoggerCategory);
+                        Logger.Default.Log(
+                            $"Circular dependency detected, parameter:{pInfo.Name}({p.Name}) from target:{target.FullName}, resolvingType:{requestedType.FullName}");
                         return null;
                     }
 
                     switch (p.ResolvingHint)
                     {
                         case ValueResolvingSourceHint.CurrentContextMappings:
+                        {
+                            object objInstance = null;
+                            if (helperContext.CurrentContextMapping != null)
                             {
-                                object objInstance = null;
-                                if (helperContext.CurrentContextMapping != null)
+                                var objContext = helperContext.CurrentContextMapping.GetContext(pType);
+                                objInstance = objContext.Instance;
+                                if (objInstance != null)
                                 {
-                                    var objContext = helperContext.CurrentContextMapping.GetContext(pType);
-                                    objInstance = objContext.Instance;
+                                    parameters.Add(objInstance);
+                                }
+                                else
+                                {
+                                    objInstance = helperContext.CurrentContextMapping.CreateInstance(resolver,
+                                        pType, options.Cast<object>().ToArray());
                                     if (objInstance != null)
                                     {
                                         parameters.Add(objInstance);
                                     }
-                                    else
-                                    {
-                                        objInstance = helperContext.CurrentContextMapping.CreateInstance(resolver,
-                                            pType, options.Cast<object>().ToArray());
-                                        if (objInstance != null)
-                                        {
-                                            parameters.Add(objInstance);
-                                        }
-                                    }
                                 }
-                                if (objInstance == null)
-                                {
-                                    Logger.Write(
-                                        $"Failed to resolve parameter, parameter:{pInfo.Name}({p.Name}) from target:{pType.FullName}, resolvingType:{requestedType.FullName}",
-                                        category: IoCNamespaceOptions.LoggerCategory);
-                                    return null;
-                                }
-                                break;
                             }
+
+                            if (objInstance == null)
+                            {
+                                Logger.Default.Log(
+                                    $"Failed to resolve parameter, parameter:{pInfo.Name}({p.Name}) from target:{pType.FullName}, resolvingType:{requestedType.FullName}");
+                                return null;
+                            }
+
+                            break;
+                        }
                         case ValueResolvingSourceHint.ValueProvider:
                             var value = p.ValueProvider.ValueProviderFactory(
                                 TypeResolverDestinationType.ConstructorParameter,
@@ -432,54 +442,57 @@ namespace AMKsGear.Core.Automation.IoC
                             parameters.Add(value);
                             break;
                         case ValueResolvingSourceHint.NamedConstants:
-                            parameters.Add(helperContext.NamedValues.First(x => x.ParameterName == p.Name).ParameterValue);
+                            parameters.Add(helperContext.NamedValues.First(x => x.ParameterName == p.Name)
+                                .ParameterValue);
                             break;
                         case ValueResolvingSourceHint.TypedConstants:
-                            parameters.Add(helperContext.TypedValues.First(x => x.ParameterType == pType).ParameterValue);
+                            parameters.Add(
+                                helperContext.TypedValues.First(x => x.ParameterType == pType).ParameterValue);
                             break;
                         case ValueResolvingSourceHint.Mappings:
+                        {
+                            var resolved = _createInstance(mapping, resolver, pType, options);
+                            if (resolved == null)
                             {
-                                var resolved = _createInstance(mapping, resolver, pType, options);
-                                if (resolved == null)
-                                {
-                                    Logger.Write(
-                                        $"Failed to resolve parameter, parameter:{pInfo.Name}({p.Name}) from target:{pType.FullName}, resolvingType:{requestedType.FullName}",
-                                        category: IoCNamespaceOptions.LoggerCategory);
-                                    return null;
-                                }
-                                parameters.Add(resolved);
-                                break;
+                                Logger.Default.Log(
+                                    $"Failed to resolve parameter, parameter:{pInfo.Name}({p.Name}) from target:{pType.FullName}, resolvingType:{requestedType.FullName}");
+                                return null;
                             }
+
+                            parameters.Add(resolved);
+                            break;
+                        }
                         case ValueResolvingSourceHint.DefaultValue:
-                            parameters.Add(pType.GetDefault());
+                            parameters.Add(Activator.CreateInstance(pType));
                             break;
                         case ValueResolvingSourceHint.ParameterOptionalDefaultValue:
                             parameters.Add(pInfo.DefaultValue);
                             break;
                         case ValueResolvingSourceHint.DefaultConstructor:
-                            {
-                                var resolved = p.IsDefaultConstructorHint
-                                    ? TypeResolver.Default.Resolve(pType)
-                                    : _createInstance(mapping, resolver, pType, options);
+                        {
+                            var resolved = p.IsDefaultConstructorHint
+                                ? TypeResolver.Default.Resolve(pType)
+                                : _createInstance(mapping, resolver, pType, options);
 
-                                if (resolved == null)
-                                {
-                                    if (p.UseDefaultValue)
-                                        parameters.Add(pType.GetDefault());
+                            if (resolved == null)
+                            {
+                                if (p.UseDefaultValue)
+                                    parameters.Add(Activator.CreateInstance(pType));
                                     else
-                                    {
-                                        Logger.Write(
-                                            $"Failed to resolve parameter using default constructor, parameter:{pInfo.Name}({p.Name}) from target:{pType.FullName}, resolvingType:{requestedType.FullName}",
-                                            category: IoCNamespaceOptions.LoggerCategory);
-                                        return null;
-                                    }
-                                }
-                                else
                                 {
-                                    parameters.Add(resolved);
+                                    Logger.Default.Log(
+                                        $"Failed to resolve parameter using default constructor, parameter:{pInfo.Name}({p.Name}) from target:{pType.FullName}, resolvingType:{requestedType.FullName}"
+                                    );
+                                    return null;
                                 }
-                                break;
                             }
+                            else
+                            {
+                                parameters.Add(resolved);
+                            }
+
+                            break;
+                        }
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
@@ -493,11 +506,10 @@ namespace AMKsGear.Core.Automation.IoC
             }
             catch (Exception ex)
             {
-                Logger.Write(
+                Logger.Default.Log(
                     $"An error has been occured when try to invoke constructor, target:{target.FullName}, resolvingType:{requestedType.FullName}" +
                     Environment.NewLine +
-                    $"Original exception:{ex}",
-                    category: IoCNamespaceOptions.LoggerCategory);
+                    $"Original exception:{ex}");
                 throw;
             }
 
@@ -508,7 +520,8 @@ namespace AMKsGear.Core.Automation.IoC
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static bool _recursiveCanResolve(TypeResolverTypeMapping mapping, TypeResolverTypeMappingContext context, Type target, List<TypeResolverOption> options)
+        private static bool _recursiveCanResolve(TypeResolverTypeMapping mapping,
+            TypeResolverTypeMappingContext context, Type target, List<TypeResolverOption> options)
         {
             return false;
         }

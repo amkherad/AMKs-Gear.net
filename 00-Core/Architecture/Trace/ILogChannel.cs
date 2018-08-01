@@ -1,11 +1,13 @@
 using System;
+using System.Runtime.CompilerServices;
+using AMKsGear.Architecture.Annotations;
 
 namespace AMKsGear.Architecture.Trace
 {
     /// <summary>
     /// Provides access to logger.
     /// </summary>
-    public interface ILogChannel
+    public interface ILogChannel : IDisposable
     {
         /// <summary>
         /// Log a string.
@@ -15,10 +17,11 @@ namespace AMKsGear.Architecture.Trace
         /// <param name="callerMemberName"></param>
         /// <param name="callerLineNumber"></param>
         /// <param name="callerFilePath"></param>
-        void LogString(string @string, ILoggingContext context,
-            string callerMemberName,
-            int callerLineNumber,
-            string callerFilePath);
+        void LogString(string @string,
+            [CanBeNull] ILoggingContext context,
+            [CallerMemberName] string callerMemberName = null,
+            [CallerLineNumber] int callerLineNumber = 0,
+            [CallerFilePath] string callerFilePath = null);
         
         /// <summary>
         /// Log an exception.
@@ -28,9 +31,10 @@ namespace AMKsGear.Architecture.Trace
         /// <param name="callerMemberName"></param>
         /// <param name="callerLineNumber"></param>
         /// <param name="callerFilePath"></param>
-        void LogException(Exception exception, ILoggingContext context,
-            string callerMemberName,
-            int callerLineNumber,
-            string callerFilePath);
+        void LogException(Exception exception,
+            [CanBeNull] ILoggingContext context,
+            [CallerMemberName] string callerMemberName = null,
+            [CallerLineNumber] int callerLineNumber = 0,
+            [CallerFilePath] string callerFilePath = null);
     }
 }

@@ -1,8 +1,8 @@
-﻿using AMKsGear.Architecture.LocalizationFramework;
+﻿using AMKsGear.Architecture.Localization;
 
 namespace AMKsGear.Core.Automation
 {
-    public interface IAutomationLocalization : ILocalization
+    public interface IAutomationLocalizationModel : ILocalizationModel
     {
         string ThereIsMoreThanOneEnumerableImplementationInDestinationType { get; }
         string UnableToFillDestinationCollection { get; }
@@ -10,7 +10,7 @@ namespace AMKsGear.Core.Automation
         string UnableToCreateAnInstanceOfDestination { get; }
         string MapperException { get; }
     }
-    public class DefaultAutomationLocalization : IAutomationLocalization
+    public class DefaultAutomationLocalizationModel : DefaultEnglishLocalization, IAutomationLocalizationModel
     {
         public string ThereIsMoreThanOneEnumerableImplementationInDestinationType => "There's more than one enumerable implementation in destination type";
         public string UnableToFillDestinationCollection => "Unable to fill destination collection.";
