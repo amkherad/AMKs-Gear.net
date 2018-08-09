@@ -35,6 +35,7 @@ namespace AMKsGear.MSTests.Core.MapperTesting
                 
                 config.CreateMap<OrderDto, OrderDto>()
                     //.FilterMembers()
+                    //.Flattening()
                     //OR: .AddBindingPath(x => x.Customer.Name, x => x.CustomerName)
                     ;
             }

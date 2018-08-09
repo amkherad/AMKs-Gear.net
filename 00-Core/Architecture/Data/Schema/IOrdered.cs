@@ -12,14 +12,14 @@ namespace AMKsGear.Architecture.Data.Schema
     public interface IOrderedEntity<TOrder> : IOrdered<TOrder>, IEntity
         //where TOrder : IEquatable<TOrder>
     { }
-    public interface IInt32OrderedEntity : IOrderedEntity<int>, IInt32IdEntity { }
-    public interface IInt64OrderedEntity : IOrderedEntity<long>, IInt64IdEntity { }
-    public interface IGuidOrderedEntity : IOrderedEntity<Guid>, IGuidIdEntity { }
+    public interface IInt32OrderedEntity : IOrderedEntity<int> { }
+    public interface IInt64OrderedEntity : IOrderedEntity<long> { }
+    public interface IGuidOrderedEntity : IOrderedEntity<Guid> { }
 
     public interface IOrderedModel<TOrder> : IOrdered<TOrder>, IModel
         //where TOrder : IEquatable<TOrder>
     { }
-    public interface IInt32OrderedModel : IOrderedEntity<int>, IInt32IdEntity { }
-    public interface IInt64OrderedModel : IOrderedEntity<long>, IInt64IdEntity { }
-    public interface IGuidOrderedModel : IOrderedEntity<Guid>, IGuidIdEntity { }
+    public interface IInt32OrderedModel : IOrderedModel<int> { }
+    public interface IInt64OrderedModel : IOrderedModel<long> { }
+    public interface IGuidOrderedModel : IOrderedModel<Guid> { }
 }

@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using AMKsGear.Architecture.Framework;
-using System.Runtime.InteropServices;
 
 // General Information about all assemblies is controlled through the following
 // set of attributes. Change these attribute values to modify the information

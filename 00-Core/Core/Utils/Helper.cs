@@ -170,21 +170,6 @@ namespace AMKsGear.Core.Utils
             }
         }
 
-        public static MimeType GetMimeTypeFromString(string mimeType)
-        {
-            if (mimeType == null) throw new ArgumentNullException(nameof(mimeType));
-            var slash = mimeType.IndexOf('/');
-            if (slash >= 0)
-            {
-                return new MimeType
-                {
-                    Media = mimeType.Substring(0, slash),
-                    Type = mimeType.Substring(slash + 1),
-                };
-            }
-            throw new InvalidOperationException("Invalid Mime-Type format.");
-        }
-
         public static TResult RecursiveJoin<T, TResult>(this T state, Func<T, T> innerValue, Func<T, TResult, TResult> aggregateFunc)
         {
             if (state == null) throw new ArgumentNullException(nameof(state));

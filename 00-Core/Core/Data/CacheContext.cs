@@ -72,6 +72,12 @@ namespace AMKsGear.Core.Data
         public void Clear() => _contents.Clear();
 
         /// <inheritdoc />
+        public void EnsureCapacity(int capacity)
+        {
+            //_contents.EnsureCapacity(capacity);
+        }
+
+        /// <inheritdoc />
         public TContent GetOrDefault(TContentDescriptor key)
         {
             return _contents.ContainsKey(key)

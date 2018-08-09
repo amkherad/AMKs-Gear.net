@@ -48,7 +48,7 @@ namespace AMKsGear.Core.Automation.Mapper.Configurator
                 return this;
             }
 
-            public Map<TDestination, TSource> UseFlattering()
+            public Map<TDestination, TSource> UseFlattening()
             {
 
                 return this;
