@@ -14,15 +14,15 @@ namespace AMKsGear.Core.Patterns.AppModel
         IEnumerable<object> GetValues(string name);
         IEnumerable<object> SetValues(string name, params object[] values);
         IEnumerable<object> SetValues(string name, IEnumerable<object> values);
-        IEnumerable<object> AddValues(string name, IEnumerable<object> values);
-        IEnumerable<object> RemoveValues(string name, IEnumerable<object> values);
+        void AddValues(string name, IEnumerable<object> values);
+        void RemoveValues(string name, IEnumerable<object> values);
 
         IEnumerable GetTypedValues();
         IEnumerable<T> GetValues<T>();
         IEnumerable<T> SetValues<T>(params T[] values);
         IEnumerable<T> SetValues<T>(IEnumerable<T> values);
-        IEnumerable<T> AddValues<T>(IEnumerable<T> values);
-        IEnumerable<T> RemoveValues<T>(IEnumerable<T> values);
+        void AddValues<T>(IEnumerable<T> values);
+        void RemoveValues<T>(IEnumerable<T> values);
 
         IEnumerable GetAllValues();
     }

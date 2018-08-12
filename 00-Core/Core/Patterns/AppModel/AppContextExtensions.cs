@@ -64,7 +64,7 @@ namespace AMKsGear.Core.Patterns.AppModel
 
             return storageContext.SetValues(name, values);
         }
-        public static IEnumerable<object> AddValues(this IAppContext context, string name, IEnumerable<object> values)
+        public static void AddValues(this IAppContext context, string name, IEnumerable<object> values)
         {
             var storageContext = context as IStorageAppContext;
             if (storageContext == null)
@@ -72,9 +72,9 @@ namespace AMKsGear.Core.Patterns.AppModel
                 throw new InvalidOperationException();
             }
 
-            return storageContext.AddValues(name, values);
+            storageContext.AddValues(name, values);
         }
-        public static IEnumerable<object> RemoveValues(this IAppContext context, string name, IEnumerable<object> values)
+        public static void RemoveValues(this IAppContext context, string name, IEnumerable<object> values)
         {
             var storageContext = context as IStorageAppContext;
             if (storageContext == null)
@@ -82,7 +82,7 @@ namespace AMKsGear.Core.Patterns.AppModel
                 throw new InvalidOperationException();
             }
 
-            return storageContext.RemoveValues(name, values);
+            storageContext.RemoveValues(name, values);
         }
                 
         public static IEnumerable<T> GetValues<T>(this IAppContext context)
@@ -115,7 +115,7 @@ namespace AMKsGear.Core.Patterns.AppModel
 
             return storageContext.SetValues<T>(values);
         }
-        public static IEnumerable<T> AddValues<T>(this IAppContext context, IEnumerable<T> values)
+        public static void AddValues<T>(this IAppContext context, IEnumerable<T> values)
         {
             var storageContext = context as IStorageAppContext;
             if (storageContext == null)
@@ -123,9 +123,9 @@ namespace AMKsGear.Core.Patterns.AppModel
                 throw new InvalidOperationException();
             }
 
-            return storageContext.AddValues<T>(values);
+            storageContext.AddValues<T>(values);
         }
-        public static IEnumerable<T> RemoveValues<T>(this IAppContext context, IEnumerable<T> values)
+        public static void RemoveValues<T>(this IAppContext context, IEnumerable<T> values)
         {
             var storageContext = context as IStorageAppContext;
             if (storageContext == null)
@@ -133,7 +133,7 @@ namespace AMKsGear.Core.Patterns.AppModel
                 throw new InvalidOperationException();
             }
 
-            return storageContext.RemoveValues<T>(values);
+            storageContext.RemoveValues<T>(values);
         }
     }
 }

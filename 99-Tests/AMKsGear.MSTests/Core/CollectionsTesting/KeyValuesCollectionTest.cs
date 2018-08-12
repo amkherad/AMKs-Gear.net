@@ -11,7 +11,7 @@ namespace AMKsGear.MSTests.Core.CollectionsTesting
     public class KeyValuesCollectionTest
     {
         [TestMethod]
-        public void NameStringCollectionTestEmpty()
+        public void NameStringCollectionEnumeratorTestEmpty()
         {
             var col = new NameStringCollection();
 
@@ -26,7 +26,7 @@ namespace AMKsGear.MSTests.Core.CollectionsTesting
         }
         
         [TestMethod]
-        public void NameStringCollectionTest6Items()
+        public void NameStringCollectionEnumeratorTest6Items()
         {
             var col = new NameStringCollection();
             

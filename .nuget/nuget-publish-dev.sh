@@ -14,7 +14,7 @@ fi
 newVersion=`expr $version + 1`
 sed -i "s/$version\$/$newVersion/g" .version
 
-export AssemblyVersion="1.$newVersion.$year$month$day"
+export AssemblyVersion="1.$year.$month$day.$newVersion"
 
 #========================================================
 #replace FrameworkInfo.CIReplace with FrameworkInfo.CIReplace.template
