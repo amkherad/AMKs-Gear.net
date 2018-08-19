@@ -350,7 +350,7 @@ namespace AMKsGear.Core.Collections
         /// </summary>
         /// <param name="key"></param>
         /// <param name="range"></param>
-        public virtual void Add(TKey key, IEnumerable<TValue> range)
+        public virtual void AddRange(TKey key, IEnumerable<TValue> range)
         {
             var col = GetOrNewEntryByKey(key);
             col.AddRange(range);

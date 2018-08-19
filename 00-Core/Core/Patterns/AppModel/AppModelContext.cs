@@ -6,6 +6,7 @@ using AMKsGear.Architecture.Automation.IoC;
 using AMKsGear.Architecture.Patterns;
 using AMKsGear.Core.Collections;
 using System.Linq;
+using AMKsGear.Architecture.Annotations;
 
 namespace AMKsGear.Core.Patterns.AppModel
 {
@@ -77,6 +78,7 @@ namespace AMKsGear.Core.Patterns.AppModel
             return _namedValues.Values;
         }
 
+        [NotNull]
         public IEnumerable<object> GetValues(string name)
         {
             return _namedValues.TryGetValues(name, out var values)
@@ -109,11 +111,20 @@ namespace AMKsGear.Core.Patterns.AppModel
             return _values.Values;
         }
 
+        [NotNull]
         public IEnumerable<T> GetValues<T>()
         {
             return _values.TryGetValues(typeof(T), out var values)
-                ? values.Cast<T>()
+                ? values.OfType<T>()
                 : Enumerable.Empty<T>();
+        }
+
+        [NotNull]
+        public IEnumerable GetValues(Type type)
+        {
+            return _values.TryGetValues(type, out var values)
+                ? values
+                : Enumerable.Empty<object>();
         }
 
         public IEnumerable<T> SetValues<T>(params T[] values)
@@ -128,7 +139,7 @@ namespace AMKsGear.Core.Patterns.AppModel
 
         public void AddValues<T>(IEnumerable<T> values)
         {
-            _values.Add(typeof(T), values);
+            _values.AddRange(typeof(T), values.Cast<object>());
         }
 
         public void RemoveValues<T>(IEnumerable<T> values)

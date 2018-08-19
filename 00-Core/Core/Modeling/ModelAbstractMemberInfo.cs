@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using AMKsGear.Architecture.Automation;
 using AMKsGear.Architecture.Automation.Mapper;
 using AMKsGear.Architecture.Modeling;
@@ -14,6 +15,7 @@ namespace AMKsGear.Core.Modeling
     {
         public virtual string Name { get; }
         public virtual Type Type { get; }
+        public MemberInfo MemberInfo { get; }
         public virtual IEnumerable<object> CustomAttributes { get; }
 
         //public IValueProv ValueResolver { get; }
@@ -26,7 +28,8 @@ namespace AMKsGear.Core.Modeling
             IEnumerable<object> customAttributes,
             //IValueResolver valueResolver,
             ModelMemberInfoValueGetter valueGetter,
-            ModelMemberInfoValueSetter valueSetter)
+            ModelMemberInfoValueSetter valueSetter,
+            MemberInfo memberInfo)
         {
             Name = name;
             Type = type;
@@ -34,6 +37,7 @@ namespace AMKsGear.Core.Modeling
             //ValueResolver = valueResolver;
             ValueGetter = valueGetter;
             ValueSetter = valueSetter;
+            MemberInfo = memberInfo;
         }
 
         public object GetUnderlyingContext() => null;

@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using AMKsGear.Architecture.Patterns;
 
 namespace AMKsGear.Core.Automation.Mapper.Configurator
 {
-    public partial class MapperConfigurator : IDisposable
+    public partial class MapperConfigurator : IConfigurator
     {
         public MapperContext Context { get; }
 
@@ -207,5 +208,7 @@ namespace AMKsGear.Core.Automation.Mapper.Configurator
                 throw new InvalidOperationException();
             }
         }
+
+        public object GetUnderlyingContext() => Context;
     }
 }

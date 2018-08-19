@@ -84,7 +84,7 @@ namespace AMKsGear.Core.Patterns.AppModel
 
             storageContext.RemoveValues(name, values);
         }
-                
+        
         public static IEnumerable<T> GetValues<T>(this IAppContext context)
         {
             var storageContext = context as IStorageAppContext;

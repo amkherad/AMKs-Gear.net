@@ -33,6 +33,20 @@ namespace AMKsGear.Core.Linq.Convert
 
 
         /// <summary>
+        /// Creates a length expression from an array expression.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static Expression CreateLengthExpression(Expression source)
+        {
+            if (source.Type.GetArrayRank() == 1)
+                return Expression.ArrayLength(source); //array.Length
+
+            return Expression.Property(source, nameof(Array.Length));
+        }
+
+
+        /// <summary>
         /// Create an expression to call <c>Array.Copy</c> to copy arrays.
         /// </summary>
         /// <param name="source">The source array.</param>
@@ -52,7 +66,8 @@ namespace AMKsGear.Core.Linq.Convert
         /// <returns></returns>
         /// <exception cref="TypeConvertException"></exception>
         /// <exception cref="NotImplementedException"></exception>
-        public static Expression CreateCopyArrayExpression(Expression arraySource, Expression arrayDestination, Expression length)
+        public static Expression CreateCopyArrayExpression(Expression arraySource, Expression arrayDestination,
+            Expression length)
         {
             if (!arraySource.Type.IsArray || !arrayDestination.Type.IsArray)
             {
@@ -114,7 +129,7 @@ namespace AMKsGear.Core.Linq.Convert
             {
                 destinationType = enumerableSource.Type.GetEnumerableBaseType();
             }
-            
+
             //source.ToArray()
             var toArray = Expression.Call(
                 typeof(Enumerable).GetMethod(nameof(Enumerable.ToArray)),
@@ -123,7 +138,7 @@ namespace AMKsGear.Core.Linq.Convert
 
             return toArray;
         }
-        
+
         public Expression CreateInlineConvertExpression(Expression source, Type destinationType)
         {
             throw new NotSupportedException();

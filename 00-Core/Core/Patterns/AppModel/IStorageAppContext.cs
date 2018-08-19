@@ -19,6 +19,7 @@ namespace AMKsGear.Core.Patterns.AppModel
 
         IEnumerable GetTypedValues();
         IEnumerable<T> GetValues<T>();
+        IEnumerable GetValues(Type type);
         IEnumerable<T> SetValues<T>(params T[] values);
         IEnumerable<T> SetValues<T>(IEnumerable<T> values);
         void AddValues<T>(IEnumerable<T> values);

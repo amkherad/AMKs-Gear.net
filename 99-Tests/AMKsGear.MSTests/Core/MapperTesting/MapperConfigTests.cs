@@ -1,4 +1,5 @@
-using AMKsGear.Architecture.Data;
+using System.Collections.Generic;
+using System.Linq;
 using AMKsGear.Core.Automation.Mapper;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -47,12 +48,17 @@ namespace AMKsGear.MSTests.Core.MapperTesting
                 CustomerName = "Ali",
                 Title = "Jack"
             };
-            var destination = new OrderDto();
+            var list = new List<OrderDto>
+            {
+                source
+            };
 
-            var expression = mapper.GetInstantiationMapExpression(destination.GetType(), source.GetType(), null);
-
+            var destination = mapper.Project<OrderDto, OrderDto>(list.AsQueryable(), null).ToList();
+            
+            var destination1 = mapper.Project<OrderDto, OrderDto>(list.AsQueryable(), null).ToList();
+            
             //Assert.AreSame(destination.CustomerName, "Ali");
-            Assert.IsNotNull(expression);
+            Assert.IsNotNull(destination);
         }
     }
 }

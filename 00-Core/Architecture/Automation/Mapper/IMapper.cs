@@ -23,12 +23,12 @@ namespace AMKsGear.Architecture.Automation.Mapper
         ///
         /// SourceToDestination(typeof(A), b, typeof(B), a); //Title will not be mapped.
         /// </remarks>
-        /// <param name="destType">Destination object type.</param>
+        /// <param name="destinationType">Destination object type.</param>
         /// <param name="destination">Destination object.</param>
-        /// <param name="srcType">Source object type.</param>
+        /// <param name="sourceType">Source object type.</param>
         /// <param name="source">Source object.</param>
         /// <param name="options">Extended mapper engine options.</param>
-        void SourceToDestination([NotNull] Type destType, [NotNull] object destination, [NotNull] Type srcType, [NotNull] object source, object[] options);
+        void SourceToDestination([NotNull] Type destinationType, [NotNull] object destination, [NotNull] Type sourceType, [NotNull] object source, object[] options);
         
         
         /// <summary>
@@ -45,22 +45,22 @@ namespace AMKsGear.Architecture.Automation.Mapper
         /// <summary>
         /// One directional mapping from value provider to destination using given types.
         /// </summary>
-        /// <param name="destType">Destination object type.</param>
+        /// <param name="destinationType">Destination object type.</param>
         /// <param name="destination">Destination object.</param>
         /// <param name="valueProvider">An object to provide custom values from different sources.</param>
         /// <param name="options">Extended mapper engine options.</param>
-        void SourceToDestination([NotNull] Type destType, [NotNull] object destination, [NotNull] IMapperValueProvider valueProvider, object[] options);
+        void SourceToDestination([NotNull] Type destinationType, [NotNull] object destination, [NotNull] IMapperValueProvider valueProvider, object[] options);
         
         
         /// <summary>
         /// Projects an enumerable of source types to destination types.
         /// </summary>
-        /// <param name="destType"></param>
-        /// <param name="srcType"></param>
+        /// <param name="destinationType"></param>
+        /// <param name="sourceType"></param>
         /// <param name="source"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        IEnumerable Project([NotNull] Type destType, [CanBeNull] Type srcType, [NotNull] IEnumerable source, object[] options);
+        IEnumerable Project([NotNull] Type destinationType, [CanBeNull] Type sourceType, [NotNull] IEnumerable source, object[] options);
         
         /// <summary>
         /// Projects an enumerable of source types to destination types.

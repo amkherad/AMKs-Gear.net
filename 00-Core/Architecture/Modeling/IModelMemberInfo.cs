@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using AMKsGear.Architecture.Patterns;
 
 namespace AMKsGear.Architecture.Modeling
@@ -23,6 +24,11 @@ namespace AMKsGear.Architecture.Modeling
         Type Type { get; }
         //Type ReflectedType { get; }
 
+        /// <summary>
+        /// Gets the member info.
+        /// </summary>
+        MemberInfo MemberInfo { get; }
+        
         /// <summary>
         /// Gets custom attributes of member.
         /// </summary>

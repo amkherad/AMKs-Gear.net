@@ -8,7 +8,10 @@ namespace AMKsGear.Architecture.Automation.Mapper
     /// </summary>
     public interface IMapperQueryableSupportEx
     {
-        Expression GetProjectionExpression(Type destType, Type srcType, object[] options);
+        Expression GetProjectionExpression(Type destinationType, Type sourceType, object[] options);
         Expression<Func<TSource, TDestination>> GetProjectionExpression<TDestination, TSource>(object[] options);
+        
+        LambdaExpression GetProjectionLambdaExpression(Type destinationType, Type sourceType, object[] options);
+        LambdaExpression GetProjectionLambdaExpression<TDestination, TSource>(object[] options);
     }
 }

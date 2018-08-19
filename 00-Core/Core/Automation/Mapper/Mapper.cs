@@ -53,7 +53,7 @@ namespace AMKsGear.Core.Automation.Mapper
         /// <param name="source"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        protected bool ValidateParameters(Type destType, ref object destination, Type srcType, ref object source,
+        protected bool ValidateParameters(Type destType, object destination, Type srcType, object source,
             object[] options)
         {
             destination = destination;
@@ -64,11 +64,24 @@ namespace AMKsGear.Core.Automation.Mapper
         /// <summary>
         /// Validates values passed to method, and changes them if required (specified in options).
         /// </summary>
+        /// <param name="destType"></param>
+        /// <param name="srcType"></param>
+        /// <param name="source"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        protected bool ValidateParameters(Type destType, Type srcType, object source, object[] options)
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// Validates values passed to method, and changes them if required (specified in options).
+        /// </summary>
         /// <param name="destination"></param>
         /// <param name="source"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        protected bool ValidateParameters<TDestination, TSource>(ref TDestination destination, ref TSource source,
+        protected bool ValidateParameters<TDestination, TSource>(TDestination destination, TSource source,
             object[] options)
         {
             destination = destination;
@@ -89,7 +102,7 @@ namespace AMKsGear.Core.Automation.Mapper
         }
 
 
-        public Mapper Compile()
+        public void Compile()
         {
             var context = Context;
             var entries = context.GetMappingsWithoutCompiledInfo();
@@ -100,7 +113,7 @@ namespace AMKsGear.Core.Automation.Mapper
             {
                 foreach (var entry in entries)
                 {
-                    var compiledInfo = Compiler.CompileMapping(this, context, entry.Value);
+                    var compiledInfo = Compiler.CompileMapping(this, context, entry.Value, MappingType.ObjectMap);
                     compiled.Add(entry.Key, compiledInfo);
                 }
             }
@@ -109,8 +122,6 @@ namespace AMKsGear.Core.Automation.Mapper
             {
                 context.CacheCompiledInfos(compiled);
             }
-
-            return this;
         }
 
 
@@ -120,7 +131,7 @@ namespace AMKsGear.Core.Automation.Mapper
         public void SourceToDestination(Type destType, object destination, Type srcType, object source,
             object[] options)
         {
-            if (!ValidateParameters(destType, ref destination, srcType, ref source, options))
+            if (!ValidateParameters(destType, destination, srcType, source, options))
             {
                 ThrowValidationException();
             }
@@ -136,7 +147,7 @@ namespace AMKsGear.Core.Automation.Mapper
         public void SourceToDestination<TDestination, TSource>(TDestination destination, TSource source,
             object[] options)
         {
-            if (!ValidateParameters(ref destination, ref source, options))
+            if (!ValidateParameters(destination, source, options))
             {
                 ThrowValidationException();
             }
@@ -168,7 +179,25 @@ namespace AMKsGear.Core.Automation.Mapper
         /// <inheritdoc />
         public IQueryable Project(Type destType, Type srcType, IQueryable source, object[] options)
         {
-            throw new NotImplementedException();
+            if (!ValidateParameters(destType, srcType, source, options))
+            {
+                ThrowValidationException();
+            }
+
+            try
+            {
+                var projectionCall = GetProjectionCallExpression(destType, srcType, options);
+                var sourceCall = Expression.Call(projectionCall.Method, source.Expression, projectionCall.Arguments[1]);
+                return source.Provider.CreateQuery(sourceCall);
+            }
+            catch (MapperException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                throw new MapperException(ex.Message, ex);
+            }
         }
 
         /// <inheritdoc />
@@ -179,12 +208,20 @@ namespace AMKsGear.Core.Automation.Mapper
                 ThrowValidationException();
             }
 
-            var expression = GetProjectionExpression<TDestination, TSource>(options);
-            if (expression == null)
+            try
             {
+                var projectionCall = GetProjectionCallExpression<TDestination, TSource>(options);
+                var sourceCall = Expression.Call(projectionCall.Method, source.Expression, projectionCall.Arguments[1]);
+                return source.Provider.CreateQuery<TDestination>(sourceCall);
             }
-
-            throw new NotImplementedException();
+            catch (MapperException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                throw new MapperException(ex.Message, ex);
+            }
         }
 
 
@@ -212,77 +249,119 @@ namespace AMKsGear.Core.Automation.Mapper
             throw new NotImplementedException();
         }
 
-        public Expression GetInstantiationMapExpression(Type destType, Type srcType, object[] options)
+
+        protected internal MethodCallExpression GetProjectionCallExpression(
+            Type destinationType,
+            Type sourceType,
+            object[] options)
         {
-            var context = Context;
-            if (context.TryGetMappingAndCompiledInfo(destType, srcType, out var mapping, out var mapCompiledInfo))
-            {
-                if (mapCompiledInfo != null)
-                {
-                    return mapCompiledInfo.NewMapExpression;
-                }
-                else
-                {
-                    lock (context.CompileLockTarget)
-                    {
-                        //Double check the compiled context.
-                        if (context.TryGetCompiledInfo(destType,srcType, out mapCompiledInfo))
-                        {
-                            return mapCompiledInfo.NewMapExpression;
-                        }
+            var lambda = GetProjectionLambdaExpression(destinationType, sourceType, options);
 
-                        mapCompiledInfo = Compiler.CompileMapping(this, context, mapping);
+            var sourceParameter = Expression.Parameter(typeof(IQueryable<>).MakeGenericType(sourceType));
+            var methodInfo = (from method in typeof(Queryable).GetMethods()
+                where method.Name == nameof(Queryable.Select)
+                let p = method.GetParameters()[1]
+                where p.ParameterType.GetGenericArguments()[0].GetGenericTypeDefinition() == typeof(Func<,>)
+                select method).First().MakeGenericMethod(sourceType, destinationType);
 
-                        context.CacheCompiledInfo(destType,srcType, mapCompiledInfo);
-
-                        return mapCompiledInfo.NewMapExpression;
-                    }
-                }
-            }
-            else if (context.AllowOnTheFlyMapping)
-            {
-                lock (context.CompileLockTarget)
-                {
-                    mapping = _addDefaultMapping(destType,srcType);
-
-                    mapCompiledInfo = Compiler.CompileMapping(this, context, mapping);
-
-                    context.CacheCompiledInfo(destType, srcType, mapCompiledInfo);
-
-                    return mapCompiledInfo.NewMapExpression;
-                }
-            }
-            else
-            {
-                throw new MappingNotFoundException();
-            }
+            return Expression.Call(methodInfo, sourceParameter, Expression.Quote(lambda));
         }
+
+        protected internal MethodCallExpression GetProjectionCallExpression<TDestination, TSource>(object[] options)
+        {
+            var lambda = GetProjectionLambdaExpression<TDestination, TSource>(options);
+
+            var sourceParameter = Expression.Parameter(typeof(IQueryable<>).MakeGenericType(typeof(TSource)));
+            var methodInfo = (from method in typeof(Queryable).GetMethods()
+                where method.Name == nameof(Queryable.Select)
+                let p = method.GetParameters()[1]
+                where p.ParameterType.GetGenericArguments()[0].GetGenericTypeDefinition() == typeof(Func<,>)
+                select method).First().MakeGenericMethod(typeof(TSource), typeof(TDestination));
+
+            return Expression.Call(methodInfo, sourceParameter, Expression.Quote(lambda));
+        }
+
 
         /// <inheritdoc />
         public Expression GetProjectionExpression(Type destType, Type srcType, object[] options)
         {
+            var expression = GetProjectionLambdaExpression(destType, srcType, options) as Expression;
+
+            if (expression == null)
+            {
+                throw new MapperException();
+            }
+
+            return expression;
+        }
+
+        /// <inheritdoc />
+        public Expression<Func<TSource, TDestination>> GetProjectionExpression<TDestination, TSource>(object[] options)
+        {
+            var expression =
+                GetProjectionLambdaExpression<TDestination, TSource>(options) as
+                    Expression<Func<TSource, TDestination>>;
+
+            if (expression == null)
+            {
+                throw new MapperException();
+            }
+
+            return expression;
+        }
+
+        public LambdaExpression GetProjectionLambdaExpression(Type destType, Type srcType, object[] options)
+        {
+            if (destType == null) throw new ArgumentNullException(nameof(destType));
+            if (srcType == null) throw new ArgumentNullException(nameof(srcType));
+
             var context = Context;
-            if (context.TryGetMappingAndCompiledInfo(destType, srcType, out var mapping, out var mapCompiledInfo))
+            if (context.TryGetMappingAndCompiledInfo(destType, srcType, out var mapping,
+                out var mapCompiledInfo))
             {
                 if (mapCompiledInfo != null)
                 {
-                    return mapCompiledInfo.MapExpression;
+                    if (mapCompiledInfo.ProjectionExpression != null)
+                    {
+                        return mapCompiledInfo.ProjectionExpression;
+                    }
+                    else
+                    {
+                        lock (context.CompileLockTarget)
+                        {
+                            //Double check the compiled context.
+                            if (context.TryGetCompiledInfo(destType, srcType,
+                                    out mapCompiledInfo) &&
+                                mapCompiledInfo.ProjectionExpression != null)
+                            {
+                                return mapCompiledInfo.ProjectionExpression;
+                            }
+
+                            mapCompiledInfo =
+                                Compiler.CompileMapping(this, context, mapCompiledInfo, mapping,
+                                    MappingType.QueryableProjection);
+
+                            return mapCompiledInfo.ProjectionExpression;
+                        }
+                    }
                 }
                 else
                 {
                     lock (context.CompileLockTarget)
                     {
                         //Double check the compiled context.
-                        if (context.TryGetCompiledInfo(destType, srcType, out mapCompiledInfo))
+                        if (context.TryGetCompiledInfo(destType, srcType, out mapCompiledInfo) &&
+                            mapCompiledInfo.ProjectionExpression != null)
                         {
-                            return mapCompiledInfo.MapExpression;
+                            return mapCompiledInfo.ProjectionExpression;
                         }
 
-                        mapCompiledInfo = Compiler.CompileMapping(this, context, mapping);
+                        mapCompiledInfo =
+                            Compiler.CompileMapping(this, context, mapping, MappingType.QueryableProjection);
 
                         context.CacheCompiledInfo(destType, srcType, mapCompiledInfo);
 
-                        return mapCompiledInfo.MapExpression;
+                        return mapCompiledInfo.ProjectionExpression;
                     }
                 }
             }
@@ -292,11 +371,11 @@ namespace AMKsGear.Core.Automation.Mapper
                 {
                     mapping = _addDefaultMapping(destType, srcType);
 
-                    mapCompiledInfo = Compiler.CompileMapping(this, context, mapping);
+                    mapCompiledInfo = Compiler.CompileMapping(this, context, mapping, MappingType.QueryableProjection);
 
                     context.CacheCompiledInfo(destType, srcType, mapCompiledInfo);
 
-                    return mapCompiledInfo.MapExpression;
+                    return mapCompiledInfo.ProjectionExpression;
                 }
             }
             else
@@ -305,52 +384,9 @@ namespace AMKsGear.Core.Automation.Mapper
             }
         }
 
-        /// <inheritdoc />
-        public Expression<Func<TSource, TDestination>> GetProjectionExpression<TDestination, TSource>(object[] options)
+        public LambdaExpression GetProjectionLambdaExpression<TDestination, TSource>(object[] options)
         {
-            var context = Context;
-            if (context.TryGetMappingAndCompiledInfo(typeof(TDestination), typeof(TSource), out var mapping,
-                out var mapCompiledInfo))
-            {
-                if (mapCompiledInfo != null)
-                {
-                    return mapCompiledInfo.MapExpression as Expression<Func<TSource, TDestination>>;
-                }
-                else
-                {
-                    lock (context.CompileLockTarget)
-                    {
-                        //Double check the compiled context.
-                        if (context.TryGetCompiledInfo(typeof(TDestination), typeof(TSource), out mapCompiledInfo))
-                        {
-                            return mapCompiledInfo.MapExpression as Expression<Func<TSource, TDestination>>;
-                        }
-
-                        mapCompiledInfo = Compiler.CompileMapping(this, context, mapping);
-
-                        context.CacheCompiledInfo(typeof(TDestination), typeof(TSource), mapCompiledInfo);
-
-                        return mapCompiledInfo.MapExpression as Expression<Func<TSource, TDestination>>;
-                    }
-                }
-            }
-            else if (context.AllowOnTheFlyMapping)
-            {
-                lock (context.CompileLockTarget)
-                {
-                    mapping = _addDefaultMapping(typeof(TDestination), typeof(TSource));
-
-                    mapCompiledInfo = Compiler.CompileMapping(this, context, mapping);
-
-                    context.CacheCompiledInfo(typeof(TDestination), typeof(TSource), mapCompiledInfo);
-
-                    return mapCompiledInfo.MapExpression as Expression<Func<TSource, TDestination>>;
-                }
-            }
-            else
-            {
-                throw new MappingNotFoundException();
-            }
+            return GetProjectionLambdaExpression(typeof(TDestination), typeof(TSource), options);
         }
 
 

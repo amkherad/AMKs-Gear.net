@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using AMKsGear.Architecture.Modeling;
@@ -9,11 +10,12 @@ namespace AMKsGear.Core.Modeling
     /// <summary>
     /// An abstraction layer on all members of a class.
     /// </summary>
+    [DebuggerDisplay("{Name} <{Type}>", Name = "{Name}")]
     public abstract class ModelMemberInfo : IModelMemberInfo, ICustomAttributeProvider
     {
         //protected readonly Type TargetType;
         //protected readonly TypeInfo TargetTypeInfo;
-        protected readonly MemberInfo MemberInfo;
+        public MemberInfo MemberInfo { get; }
         protected readonly Type MemberType;
 
         public ModelMemberInfo( /*Type type, TypeInfo typeInfo,*/ MemberInfo memberInfo, Type memberType)

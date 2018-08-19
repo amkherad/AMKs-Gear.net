@@ -6,6 +6,8 @@
 .nuget/.build/
 .nuget/.repo/
 .output/
+.output/Debug/
+.output/Release/
 
 # User-specific files
 *.suo

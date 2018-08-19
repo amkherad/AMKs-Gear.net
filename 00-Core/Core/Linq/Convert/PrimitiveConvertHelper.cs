@@ -28,29 +28,6 @@ namespace AMKsGear.Core.Linq.Convert
             }
         }
 
-
-        /// <summary>
-        /// <see cref="Convert"/> conversion method mapping to it's type.
-        /// </summary>
-        private static readonly IDictionary<Type, string> _convertMethodNameMapping = new Dictionary<Type, string>
-        {
-            {typeof(bool), nameof(System.Convert.ToBoolean)},
-            {typeof(short), nameof(System.Convert.ToInt16)},
-            {typeof(int), nameof(System.Convert.ToInt32)},
-            {typeof(long), nameof(System.Convert.ToInt64)},
-            {typeof(float), nameof(System.Convert.ToSingle)},
-            {typeof(double), nameof(System.Convert.ToDouble)},
-            {typeof(decimal), nameof(System.Convert.ToDecimal)},
-            {typeof(ushort), nameof(System.Convert.ToUInt16)},
-            {typeof(uint), nameof(System.Convert.ToUInt32)},
-            {typeof(ulong), nameof(System.Convert.ToUInt64)},
-            {typeof(byte), nameof(System.Convert.ToByte)},
-            {typeof(sbyte), nameof(System.Convert.ToSByte)},
-            {typeof(char), nameof(System.Convert.ToChar)},
-            {typeof(DateTime), nameof(System.Convert.ToDateTime)}
-        };
-
-
         public bool AllowNullableTypes { get; set; }
 
 
@@ -110,7 +87,7 @@ namespace AMKsGear.Core.Linq.Convert
                 else if (sourceType.IsConvertible())
                 {
                     MethodInfo convertMethodInfo;
-                    if (_convertMethodNameMapping.TryGetValue(destinationType, out var methodName) &&
+                    if (TypeConvertHelper.ConvertMethodNameMapping.TryGetValue(destinationType, out var methodName) &&
                         (convertMethodInfo = typeof(System.Convert).GetMethod(methodName, new[] {sourceType})) != null
                     )
                     {
@@ -153,7 +130,7 @@ namespace AMKsGear.Core.Linq.Convert
                 else if (sourceType.IsConvertible())
                 {
                     MethodInfo convertMethodInfo;
-                    if (_convertMethodNameMapping.TryGetValue(destinationType, out var methodName) &&
+                    if (TypeConvertHelper.ConvertMethodNameMapping.TryGetValue(destinationType, out var methodName) &&
                         (convertMethodInfo = typeof(System.Convert).GetMethod(methodName, new[] {sourceType})) != null
                     )
                     {

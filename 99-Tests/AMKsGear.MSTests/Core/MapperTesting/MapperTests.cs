@@ -18,6 +18,7 @@ namespace AMKsGear.MSTests.Core.MapperTesting
         public void XX(Mapping row)
         {
             Contract.Requires<ArgumentNullException>(row != null, "row");
+            
         }
     }
 }

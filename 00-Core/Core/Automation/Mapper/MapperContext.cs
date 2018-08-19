@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
+using AMKsGear.Architecture.Automation.Dependency;
 using AMKsGear.Architecture.Data;
 using AMKsGear.Architecture.Parallelism;
 using AMKsGear.Core.Collections;
@@ -18,16 +20,32 @@ namespace AMKsGear.Core.Automation.Mapper
     /// <remarks>
     /// This class is thread-safe.
     /// </remarks>
+    [DebuggerDisplay("Count={Count}, IsSealed={IsSealed}")]
     public class MapperContext : ICloneable, ICollection<Mapping>
     {
         protected IDictionary<int, Mapping> MappingRows { get; }
         protected ICacheContext<int, MappingCompiledInfo> CompiledCache { get; }
 
-
         protected ReaderWriterLockSlim Lock;
         public object CompileLockTarget { get; }
-
+        
         private bool _isReadOnly = false;
+        
+        
+        /// <summary>
+        /// The dependency resolver to use to create new object instances.
+        /// </summary>
+        public IDependencyResolver DependencyResolver { get; internal set; }
+
+        /// <summary>
+        /// Determines whether dependency resolver should be used to create new object instances. 
+        /// </summary>
+        public bool UseDependencyResolverForObjectMapping { get; internal set; }
+        
+        /// <summary>
+        /// The member matching strategy to find mappings.
+        /// </summary>
+        public IMapperMemberMatchingStrategy MemberMatchingStrategy { get; internal set; }
 
         /// <summary>
         /// Determines the ability to add a mapping using general map options when mapping doesn't found.
@@ -39,6 +57,12 @@ namespace AMKsGear.Core.Automation.Mapper
         /// </summary>
         public bool IsConfigured { get; internal set; }
 
+        /// <summary>
+        /// Determines whether context can be edited or not.
+        /// </summary>
+        public bool IsSealed { get; internal set; }
+        
+                
 
         public MapperContext()
         {
@@ -47,6 +71,8 @@ namespace AMKsGear.Core.Automation.Mapper
 
             Lock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
             CompileLockTarget = new object();
+
+            MemberMatchingStrategy = MapperMemberExactMatchingStrategy.Instance;
         }
 
         public MapperContext(IEnumerable<Mapping> mappingRows)
@@ -56,6 +82,8 @@ namespace AMKsGear.Core.Automation.Mapper
 
             Lock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
             CompileLockTarget = new object();
+
+            MemberMatchingStrategy = MapperMemberExactMatchingStrategy.Instance;
         }
 
         protected MapperContext(IDictionary<int, Mapping> mappingRows)
@@ -65,6 +93,8 @@ namespace AMKsGear.Core.Automation.Mapper
 
             Lock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
             CompileLockTarget = new object();
+
+            MemberMatchingStrategy = MapperMemberExactMatchingStrategy.Instance;
         }
 
 
@@ -298,7 +328,7 @@ namespace AMKsGear.Core.Automation.Mapper
 
             try
             {
-                // Create a snapshot of list.
+                // Create a snapshot of the rows.
                 return MappingRows.Values
                     .GetEnumerator();
             }

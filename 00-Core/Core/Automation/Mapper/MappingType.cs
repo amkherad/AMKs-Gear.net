@@ -2,8 +2,9 @@ namespace AMKsGear.Core.Automation.Mapper
 {
     public enum MappingType
     {
-        QueryableProjection,
         ObjectMap,
+        QueryableProjection,
+        CollectionSynchronization,
         
         Default = ObjectMap
     }

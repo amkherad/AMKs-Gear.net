@@ -11,12 +11,12 @@ namespace AMKsGear.Architecture.Automation.Mapper
         /// <summary>
         /// Projects a source queryable of srcType to a queryable of destType.
         /// </summary>
-        /// <param name="destType"></param>
-        /// <param name="srcType"></param>
+        /// <param name="destinationType"></param>
+        /// <param name="sourceType"></param>
         /// <param name="source"></param>
         /// <param name="options">Mapper engine specific options.</param>
         /// <returns></returns>
-        IQueryable Project(Type destType, Type srcType, IQueryable source, object[] options);
+        IQueryable Project(Type destinationType, Type sourceType, IQueryable source, object[] options);
         
         /// <summary>
         /// Creates a projection query from source to destination.

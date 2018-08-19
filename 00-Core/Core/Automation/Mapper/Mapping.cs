@@ -22,13 +22,6 @@ namespace AMKsGear.Core.Automation.Mapper
         /// The source side of the mapping.
         /// </summary>
         public Type SourceType { get; }
-
-        
-        /// <summary>
-        /// Mapping strategy.
-        /// </summary>
-        public MappingStrategy MappingStrategy { get; }
-        
         
         /// <summary>
         /// 
@@ -39,7 +32,7 @@ namespace AMKsGear.Core.Automation.Mapper
         /// <summary>
         /// A table of member mappings.
         /// </summary>
-        public IList<MemberMapInfo> MemberMappings { get; }
+        public List<MemberMapInfo> MemberMappings { get; }
 
 
         /// <summary>
@@ -48,19 +41,16 @@ namespace AMKsGear.Core.Automation.Mapper
         /// <param name="destinationType">The destination side of the mapping.</param>
         /// <param name="sourceType">The source side of the mapping.</param>
         /// <param name="memberMappings"></param>
-        /// <param name="mappingStrategy"></param>
         public Mapping(
             Type destinationType,
             Type sourceType,
-            IList<MemberMapInfo> memberMappings,
-            MappingStrategy mappingStrategy)
+            List<MemberMapInfo> memberMappings)
         {
             if (destinationType == null) throw new ArgumentNullException(nameof(destinationType));
             
             DestinationType = destinationType;
             SourceType = sourceType;
             MemberMappings = memberMappings;
-            MappingStrategy = mappingStrategy;
         }
 
 

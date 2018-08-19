@@ -17,6 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Core\DependencyContainerTesting\artefacts" />
       <Folder Include="Core\MapperTesting\artefacts" />
     </ItemGroup>
 

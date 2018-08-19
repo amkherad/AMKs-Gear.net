@@ -103,7 +103,7 @@ namespace AMKsGear.Core.Automation.Reflection
             return true;
         }
 
-        
+
         /// <summary>
         /// Checks whether type is inherited from <see cref="IConvertible"/>.
         /// </summary>
@@ -138,10 +138,29 @@ namespace AMKsGear.Core.Automation.Reflection
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsPrimitiveOrDecimal(this TypeInfo type)
             => type.IsPrimitive || type == typeof(decimal);
-        
+
 
         /// <summary>
-        /// 
+        /// Determines whether a type is assignable to a generic type.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="genericType"></param>
+        /// <returns></returns>
+        public static bool IsAssignableToGeneric(this Type type, Type genericType)
+        {
+            var interfaces = type.GetInterfaces();
+            foreach (var iface in interfaces)
+            {
+                if (iface.IsGenericType && iface.GetGenericTypeDefinition() == genericType)
+                    return true;
+            }
+
+            return false;
+        }
+
+
+        /// <summary>
+        /// Returns the type of <see cref="IEnumerable{T}"/> generic argument type or typeof(object) if <see cref="IEnumerable"/> presented.
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
@@ -165,9 +184,125 @@ namespace AMKsGear.Core.Automation.Reflection
                 return typeof(object);
             }
 
-#warning LocalizationServices Required.
+#warning Localization Required.
             //@LocalizationRequired
             throw new Exception();
+        }
+
+        /// <summary>
+        /// Returns the type of <see cref="IEnumerable{T}"/> generic argument type or typeof(object) if <see cref="IEnumerable"/> presented.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static Type GetEnumerableBaseType(this TypeInfo type)
+        {
+            if (type.IsArray)
+            {
+                return type.GetElementType();
+            }
+
+            foreach (var iface in type.GetInterfaces())
+            {
+                if (iface.IsGenericType && iface.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+                {
+                    return iface.GetGenericArguments()[0];
+                }
+            }
+
+            if (typeof(IEnumerable).IsAssignableFrom(type))
+            {
+                return typeof(object);
+            }
+
+#warning Localization Required.
+            //@LocalizationRequired
+            throw new Exception();
+        }
+        
+        
+        /// <summary>
+        /// Determines whether the type has default constructor.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static bool HasDefaultConstructor(this Type type)
+        {
+            if (type == typeof(void) ||
+                type.IsAbstract ||
+                type.IsInterface)
+            {
+                return false;
+            }
+
+            if (type.IsValueType)
+            {
+                return true;
+            }
+
+            return type.GetConstructor(Type.EmptyTypes) != null;
+        }
+        
+        /// <summary>
+        /// Determines whether the type has default constructor.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static bool HasDefaultConstructor(this TypeInfo type)
+        {
+            if (type == typeof(void) ||
+                type.IsAbstract ||
+                type.IsInterface)
+            {
+                return false;
+            }
+
+            if (type.IsValueType)
+            {
+                return true;
+            }
+
+            return type.GetConstructor(Type.EmptyTypes) != null;
+        }
+
+
+        /// <summary>
+        /// Tries to get default constructor for the type.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="constructorInfo"></param>
+        /// <returns></returns>
+        public static bool TryGetDefaultConstructor(this Type type, out ConstructorInfo constructorInfo)
+        {
+            if (type == typeof(void) ||
+                type.IsAbstract ||
+                type.IsInterface)
+            {
+                constructorInfo = default;
+                return false;
+            }
+
+            constructorInfo = type.GetConstructor(Type.EmptyTypes);
+            return constructorInfo != null;
+        }
+        
+        /// <summary>
+        /// Tries to get default constructor for the type.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="constructorInfo"></param>
+        /// <returns></returns>
+        public static bool TryGetDefaultConstructor(this TypeInfo type, out ConstructorInfo constructorInfo)
+        {
+            if (type == typeof(void) ||
+                type.IsAbstract ||
+                type.IsInterface)
+            {
+                constructorInfo = default;
+                return false;
+            }
+
+            constructorInfo = type.GetConstructor(Type.EmptyTypes);
+            return constructorInfo != null;
         }
     }
 }

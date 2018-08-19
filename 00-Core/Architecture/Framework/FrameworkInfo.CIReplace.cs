@@ -5,7 +5,7 @@ namespace AMKsGear.Architecture.Framework
     *** </summary> **/
     public partial class FrameworkInfo
     {
-        public const string Version = "1.18.0812.70";
+        public const string Version = "1.18.0813.74";
         public const string Copyright = "Copyright ©  18  Ali Mousavi Kherad";
     }
 }

@@ -7,7 +7,7 @@ using AMKsGear.Architecture.Data.Types;
 
 namespace AMKsGear.Core.Linq.Expressions
 {
-    public static class ExpressionHelper
+    public static partial class ExpressionHelper
     {
         private const string ToLowerMethodName = nameof(String.ToLower);
         private const string ToUpperMethodName = nameof(String.ToUpper);

@@ -87,8 +87,7 @@ namespace AMKsGear.Core.Automation.Mapper.Configurator
                 var row = new Mapping(
                     typeof(TDestination),
                     typeof(TSource),
-                    MapHelpers.GetMemberMappings(
-                        this,
+                    MapperHelpers.GetMemberMappings(
                         typeof(TDestination),
                         typeof(TSource),
                         DestinationBindingFlags,
@@ -96,10 +95,8 @@ namespace AMKsGear.Core.Automation.Mapper.Configurator
                         MemberMatchingStrategy ?? MapperMemberExactMatchingStrategy.Instance,
                         DestinationFilters,
                         SourceFilters,
-                        MappingType,
-                        out var mappingStrategy
-                        ),
-                    mappingStrategy
+                        MappingType
+                        )
                     );
 
                 return new[] {row};

@@ -33,5 +33,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ErrorHandling" />
+    <Folder Include="Serialization\Bson" />
   </ItemGroup>
 </Project>
