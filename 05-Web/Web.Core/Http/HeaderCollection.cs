@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Runtime.Serialization;
+using System.Linq;
 using AMKsGear.Core.Collections;
 
 namespace AMKsGear.Web.Core.Http
@@ -80,7 +80,39 @@ namespace AMKsGear.Web.Core.Http
         }
 
         #region Helper Methods
+
+        public override string SingleOrDefault(string key)
+        {
+            var value = base.SingleOrDefault(key);
+
+            if (value != null)
+            {
+                if (value.Contains(';'))
+                {
+                    var parts = value.Split(';');
+                    value = parts[0];
+                }
+            }
+            
+            return value;
+        }
         
+        public override string Single(string key)
+        {
+            var value = base.Single(key);
+
+            if (value != null)
+            {
+                if (value.Contains(';'))
+                {
+                    var parts = value.Split(';');
+                    value = parts[0];
+                }
+            }
+            
+            return value;
+        }
+
         protected void SetStringOrRemoveOnNull(string key, string value)
         {
             if (value == null)
@@ -260,6 +292,26 @@ namespace AMKsGear.Web.Core.Http
         {
             get { return SingleOrDefault(ContentRangeHeaderName); }
             set { SetStringOrRemoveOnNull(ContentRangeHeaderName, value); }
+        }
+
+        public string Encoding
+        {
+            get
+            {
+                var value = base.SingleOrDefault(ContentTypeHeaderName);
+
+                if (value != null)
+                {
+                    if (value.Contains(';'))
+                    {
+                        var parts = value.Split(';');
+
+                        return parts[1]; //Content-Type: application/json; utf8
+                    }
+                }
+
+                return null;
+            }
         }
 
         public string ContentType
