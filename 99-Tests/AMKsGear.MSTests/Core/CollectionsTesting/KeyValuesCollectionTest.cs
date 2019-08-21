@@ -13,7 +13,7 @@ namespace AMKsGear.MSTests.Core.CollectionsTesting
         [TestMethod]
         public void NameStringCollectionEnumeratorTestEmpty()
         {
-            var col = new NameStringCollection();
+            var col = new NameStringsCollection();
 
             foreach (KeyValuePair<string, string> row in col)
             {
@@ -28,7 +28,7 @@ namespace AMKsGear.MSTests.Core.CollectionsTesting
         [TestMethod]
         public void NameStringCollectionEnumeratorTest6Items()
         {
-            var col = new NameStringCollection();
+            var col = new NameStringsCollection();
             
             col.Add("key1", "value1");
             col.Add("key1", "value2");

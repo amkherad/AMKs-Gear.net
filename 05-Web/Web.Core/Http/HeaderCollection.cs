@@ -6,7 +6,7 @@ using AMKsGear.Core.Collections;
 
 namespace AMKsGear.Web.Core.Http
 {
-    public class HeaderCollection : NameStringCollection
+    public class HeaderCollection : NameStringsCollection
     {
         public const string Rfc7231DateFormat = "ddd, dd MMM yyyy HH:mm:ss 'GMT'"; //Same As RFC1123
         public const string Rfc7231DateFormatToString = "R"; //R = RFC1123

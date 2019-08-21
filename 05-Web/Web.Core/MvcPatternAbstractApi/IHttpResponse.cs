@@ -6,6 +6,6 @@ namespace AMKsGear.Web.Core.MvcPatternAbstractApi
     public interface IHttpResponse : IAdapter
     {
 
-        NameStringCollection Headers { get; }
+        NameStringsCollection Headers { get; }
     }
 }

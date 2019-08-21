@@ -10,11 +10,11 @@ namespace AMKsGear.Web.Core.MvcPatternAbstractApi
         string GetRawBody();
         Task<string> GetRawBodyAsync();
 
-        NameStringCollection Form { get; }
-        NameStringCollection QueryString { get; }
-        NameStringCollection ServerVariables { get; }
-        NameStringCollection AllParams { get; }
-        NameStringCollection Headers { get; }
+        NameStringsCollection Form { get; }
+        NameStringsCollection QueryString { get; }
+        NameStringsCollection ServerVariables { get; }
+        NameStringsCollection AllParams { get; }
+        NameStringsCollection Headers { get; }
 
         IEnumerable<string> AcceptTypes { get; }
         string HttpMethod { get; }

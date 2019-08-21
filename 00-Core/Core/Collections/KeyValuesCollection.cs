@@ -18,6 +18,7 @@ namespace AMKsGear.Core.Collections
         private readonly IEqualityComparer<TValue> _valueComparer;
         private bool _removeEmptyKeys = true;
 
+        
         public KeyValuesCollection()
         {
             _keyComparer = EqualityComparer<TKey>.Default;
@@ -27,9 +28,53 @@ namespace AMKsGear.Core.Collections
 
         public KeyValuesCollection(IEqualityComparer<TKey> comparer)
         {
+            _keyComparer = comparer;
             _entries = new Dictionary<TKey, Entry>(comparer);
             _orderedKeys = new List<TKey>();
-            _keyComparer = comparer;
+        }
+
+        public KeyValuesCollection(int capacity)
+        {
+            _keyComparer = EqualityComparer<TKey>.Default;
+            _entries = new Dictionary<TKey, Entry>(capacity, _keyComparer);
+            _orderedKeys = new List<TKey>(capacity);
+        }
+
+        public KeyValuesCollection(int capacity, IEqualityComparer<TKey> comparer)
+        {
+            _keyComparer = EqualityComparer<TKey>.Default;
+            _entries = new Dictionary<TKey, Entry>(capacity, comparer);
+            _orderedKeys = new List<TKey>(capacity);
+        }
+
+        public KeyValuesCollection(IEnumerable<KeyValuePair<TKey, TValue>> values)
+        {
+            _keyComparer = EqualityComparer<TKey>.Default;
+            
+            var vals = values.ToList();
+            var capacity = vals.Select(v => v.Key).Distinct(_keyComparer).Count();
+            
+            _entries = new Dictionary<TKey, Entry>(capacity, _keyComparer);
+            _orderedKeys = new List<TKey>(capacity);
+
+            foreach (var elem in vals)
+            {
+                Add(elem.Key, elem.Value);
+            }
+        }
+
+        public KeyValuesCollection(IDictionary<TKey, TValue> values)
+        {
+            var capacity = values.Keys.Count;
+            
+            _keyComparer = EqualityComparer<TKey>.Default;
+            _entries = new Dictionary<TKey, Entry>(capacity, _keyComparer);
+            _orderedKeys = new List<TKey>(capacity);
+
+            foreach (var elem in values)
+            {
+                Add(elem.Key, elem.Value);
+            }
         }
 
 
